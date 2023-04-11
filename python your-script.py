@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/yourusername/your-repository.git'
+                git branch: 'main', url: 'https://github.com/yogi1754/pythonProject7.git'
             }
         }
         
