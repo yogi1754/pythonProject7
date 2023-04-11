@@ -8,12 +8,6 @@ pipeline {
             }
         }
         
-        stage('Install dependencies') {
-            steps {
-                sh 'pip install pymongo pandas numpy scikit-learn matplotlib seaborn'
-            }
-        }
-        
         stage('Run script') {
             steps {
                 sh 'main.py'
