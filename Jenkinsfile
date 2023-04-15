@@ -10,15 +10,15 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                sh 'python game.py'
+                bat 'python game.py'
             }
         }
 
         stage('Push Results to GitHub') {
             steps {
                 git branch: 'master', url: 'https://github.com/yogi1754/pythonProject7.git'
-                sh 'cp -r ./output/* ./new-project/'
-                sh 'cd ./new-project && git add . && git commit -m "Update results" && git push'
+                bat 'cp -r ./output/* ./new-project/'
+                bat 'cd ./new-project && git add . && git commit -m "Update results" && git push'
             }
         }
     }
