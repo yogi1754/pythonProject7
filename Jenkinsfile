@@ -13,6 +13,12 @@ pipeline {
                 bat 'game.py'
             }
         }
+        
+         stage('Install Dependencies') {
+            steps {
+                bat 'pip install pymongo'
+            }
+        }
 
         stage('Push Results to GitHub') {
             steps {
