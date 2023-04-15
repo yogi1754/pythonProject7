@@ -10,7 +10,7 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                bat 'python game.py'
+                bat 'game.py'
             }
         }
 
