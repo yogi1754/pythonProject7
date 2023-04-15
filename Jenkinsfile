@@ -7,18 +7,18 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/yogi1754/pythonProject7.git'
             }
         }
+        
+        stage('Install Dependencies') {
+            steps {
+                bat 'pip install pymongo'
+            }
+        }
 
         stage('Run Python Script') {
             steps {
                 bat 'game.py'
             }
-        }
-        
-         stage('Install Dependencies') {
-            steps {
-                bat 'pip install pymongo'
-            }
-        }
+        }              
 
         stage('Push Results to GitHub') {
             steps {
