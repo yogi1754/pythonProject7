@@ -1,14 +1,5 @@
 pipeline {
     agent any
-
-    options {
-        skipStagesAfterUnstable()
-        timestamps()
-        buildDiscarder(logRotator(numToKeepStr:'5'))
-        timeout(time: 1, unit: 'HOURS')
-        quietPeriod(5)
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
