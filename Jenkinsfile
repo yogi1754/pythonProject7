@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    options {
+        skipStagesAfterUnstable()
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr:'5'))
+        timeout(time: 1, unit: 'HOURS')
+        quietPeriod(5)
+    }
+
     stages {
         stage('Clone Repository') {
             steps {
@@ -10,7 +18,7 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                sh 'python game.py'
+                sh 'nohup python game.py > game.out 2>&1 &'
             }
         }
 
