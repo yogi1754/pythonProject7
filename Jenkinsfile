@@ -10,7 +10,7 @@ pipeline {
 
         stage('Run Python Script') {
             steps {
-                sh 'main.py'
+                sh 'python game.py'
             }
         }
 
