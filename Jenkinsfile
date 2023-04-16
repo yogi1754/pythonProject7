@@ -12,6 +12,9 @@ pipeline {
             steps {
                 bat 'Py -m pip install pymongo'
                 bat 'Py -m pip install pandas'
+                bat 'Py -m pip install scikit-learn'
+                bat 'Py -m pip install matplotlib'
+                bat 'Py -m pip install seaborn'
             }
         }
 
