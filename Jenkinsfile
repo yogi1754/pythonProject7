@@ -10,7 +10,7 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                bat 'Python -m pip install pymongo'
+                bat 'Py -m pip install pymongo'
             }
         }
 
