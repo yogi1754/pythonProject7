@@ -11,6 +11,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 bat 'Py -m pip install pymongo'
+                bat 'Py -m pip install pandas'
             }
         }
 
