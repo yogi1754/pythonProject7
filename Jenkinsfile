@@ -62,20 +62,20 @@ pipeline {
                     df['log_rating'] = np.log(df['star_rating'])
 
                     # Connect to SQL Server
-					cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
-					cursor = cnxn.cursor()
+		    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
+		    cursor = cnxn.cursor()
   
-					# Create SQL table for data
-					cursor.execute('CREATE TABLE gift_card_reviews (review_date date, star_rating int, log_rating float)')
+		    # Create SQL table for data
+		    cursor.execute('CREATE TABLE gift_card_reviews (review_date date, star_rating int, log_rating float)')
   
-					# Insert data into SQL table
-					for index, row in df.iterrows():
-					cursor.execute('INSERT INTO gift_card_reviews (review_date, star_rating, log_rating) values(?,?,?)', row['review_date'], row['star_rating'], row['log_rating'])
-					cnxn.commit()
+		    # Insert data into SQL table
+		    for index, row in df.iterrows():
+		    cursor.execute('INSERT INTO gift_card_reviews (review_date, star_rating, log_rating) values(?,?,?)', row['review_date'], row['star_rating'], row['log_rating'])
+		    cnxn.commit()
   
-					# Close the SQL connection
-					cursor.close()
-					cnxn.close()
+		    # Close the SQL connection
+		    cursor.close()
+		    cnxn.close()
 
                     // Visualize the data using a scatter plot
                     plt.scatter(df['review_date'], df['log_rating'])
