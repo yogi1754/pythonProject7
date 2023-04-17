@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Install Packages') {
             steps {
-                bat 'Py install pymongo' 
+                bat 'Py python -m install pymongo' 
 		bat 'Py install pandas'
 		bat 'Py install numpy' 
 		bat 'Py install scikit-learn' 
