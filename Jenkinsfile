@@ -29,11 +29,13 @@ pipeline {
                     import matplotlib.pyplot as plt
                     import seaborn as sns
 
-                    // Connect to MongoDB
-                    MongoClientURI uri = new MongoClientURI("mongodb://<username>:<password>@<hostname>:<port>/<database_name>")
-                    MongoClient mongoClient = new MongoClient(uri)
-                    MongoDatabase db = mongoClient.getDatabase(database_name)
-                    MongoCollection<Document> collection = db.getCollection(collection_name)
+                    # Connect to MongoDB
+		    client = MongoClient()
+                    database_name = 'amazon_reviews'
+                    collection_name = 'gift_cards'
+                    db = client[database_name]
+                    collection = db[collection_name]
+
 
                     // Download and extract the dataset
                     def reader = new CSVReader(new FileReader("${filename}"), '\t')
@@ -60,7 +62,7 @@ pipeline {
                     df['log_rating'] = np.log(df['star_rating'])
 
                     # Connect to SQL Server
-					cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\SQLEXPRESS;DATABASE=database_name')
+					cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
 					cursor = cnxn.cursor()
   
 					# Create SQL table for data
