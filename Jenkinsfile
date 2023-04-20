@@ -48,7 +48,7 @@ pipeline {
                     def rows = file.readLines().drop(1) // skip header row
                     for (int i = 0; i < rows.size(); i++) {
                         def row = rows[i].split('\t')
-                        def document = new BasicDBObject()
+                        def document = BasicDBObject()
                         document.put('marketplace', row[0])
                         document.put('customer_id', row[1])
                         document.put('review_id', row[2])
