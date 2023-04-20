@@ -38,7 +38,7 @@ collection_name = 'gift_cards'
 db = client[database_name]
 collection = db[collection_name]
 
-# Download and extract the dataset
+// Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
