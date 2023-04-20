@@ -29,7 +29,7 @@ pipeline {
         // Import required modules and libraries
         bat '''
         pip install pymongo pandas numpy scikit-learn matplotlib seaborn
-        '''
+   
         // Connect to MongoDB
         def mongo_client = new MongoClient()
         def db_name = 'amazon_reviews'
