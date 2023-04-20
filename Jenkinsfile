@@ -65,6 +65,13 @@ pipeline {
 
                     // Perform data transformation
                     df['log_rating'] = np.log(df['star_rating'])
+		    
+		    # Handle outliers
+		    q1, q3 = np.percentile(df['log_rating'], [25, 75])
+		    iqr = q3 - q1
+		    lower_bound = q1 - (1.5 * iqr)
+		    upper_bound = q3 + (1.5 * iqr)
+		    df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
 
                     # Connect to SQL Server
 		    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
@@ -88,17 +95,17 @@ pipeline {
                     plt.xlabel("review_date")
                     plt.ylabel("Logarithm of Rating")
                     plt.savefig('https://github.com/yogi1754/pythonProject7.git/Logarithm of Rating Over Time.png')
-					plt.close()
+		    plt.close()
                     
-					# Create a bar chart of the count of reviews by gift card category
+		    # Create a bar chart of the count of reviews by gift card category
                     category_counts = df.groupby('product_category')['review_id'].count()
                     plt.bar(category_counts.index, category_counts.values)
-					plt.title("Number of Reviews by Gift Card Category")
-					plt.xlabel("Gift Card Category")
-					plt.ylabel("Number of Reviews")
-					plt.xticks(rotation=90)
-					plt.savefig('https://github.com/yogi1754/pythonProject7.git/number_of_reviews_by_gift_card_category.png')
-					plt.close()
+		    plt.title("Number of Reviews by Gift Card Category")
+		    plt.xlabel("Gift Card Category")
+		    plt.ylabel("Number of Reviews")
+		    plt.xticks(rotation=90)
+		    plt.savefig('https://github.com/yogi1754/pythonProject7.git/number_of_reviews_by_gift_card_category.png')
+		    plt.close()
 
 					# Create a scatter plot matrix of the numerical variables in the dataset
 					sns.pairplot(df.select_dtypes(include=[np.number]))
@@ -127,7 +134,7 @@ pipeline {
                     plt.xlabel("Star Ratings")
                     plt.ylabel("Count")
                     plt.savefig('https://github.com/yogi1754/pythonProject7.git/Histogram of Star Ratings.png')
-					plt.close()
+		    plt.close()
 
                     # Create a bar chart of the count of reviews by gift card category
                     def category_counts = df.groupby('product_category')['review_id'].count()
@@ -136,14 +143,14 @@ pipeline {
                     plt.xlabel("Gift Card Category")
                     plt.ylabel("Number of Reviews")
                     plt.xticks(rotation=90)
-					plt.savefig('https://github.com/yogi1754/pythonProject7.git/number_of_reviews_by_gift_card_category.png')
-					plt.close()
+		    plt.savefig('https://github.com/yogi1754/pythonProject7.git/number_of_reviews_by_gift_card_category.png')
+		    plt.close()
 
 
                     # Create a violinplot of the star ratings and save the figure
-					sns.violinplot(x='star_rating', data=df)
-					plt.title("Violinplot of Star Ratings")
-					plt.savefig('https://github.com/yogi1754/pythonProject7.git/violinplot_star_ratings.png')
+		    sns.violinplot(x='star_rating', data=df)
+		    plt.title("Violinplot of Star Ratings")
+	            plt.savefig('https://github.com/yogi1754/pythonProject7.git/violinplot_star_ratings.png')
       
       # Close the MongoDB connection
       client.close()
