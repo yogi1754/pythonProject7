@@ -13,15 +13,14 @@ pipeline {
             }
         }
         
- stage('Download and Extract Dataset') {
+stage('Download and Extract Dataset') {
     steps {
-        bat 'curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-        script {
-            import tarfile
-            with tarfile.open('amazon_reviews_us_Gift_Card_v1_00.tsv.gz', 'r') as tar
-              tar.extractall()
-        }
-        bat 'head -n 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv'
+        bat '''
+            #!/bin/bash
+            curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz
+            gunzip -c amazon_reviews_us_Gift_Card_v1_00.tsv.gz > amazon_reviews_us_Gift_Card_v1_00.tsv
+            head -n 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv
+        '''
     }
 }
 
