@@ -1,19 +1,26 @@
 pipeline {
   agent any
+  
+  tools {
+    maven 'Maven'
+    jdk 'Java'
+  }
 
   stages {
     stage('Install Packages') {
       steps {
-        bat 'Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn'
+        sh 'mvn install:install-file -Dfile=./ojdbc8.jar -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=19.3 -Dpackaging=jar'
+        sh 'python3 -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn'
       }
     }
 
     stage('Download and Extract Dataset') {
       steps {
-        bat '''
-        curl - O https: //s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
-          gzip - d amazon_reviews_us_Gift_Card_v1_00.tsv.gz
-        more + 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv '''
+        sh '''
+        curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
+        gzip -d amazon_reviews_us_Gift_Card_v1_00.tsv.gz
+        tail -n +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv 
+        '''
       }
     }
 
@@ -21,33 +28,33 @@ pipeline {
       steps {
         script {
           // Import required modules and libraries
-          def pymongo = PyModule('pymongo')
-          def pandas = PyModule('pandas')
-          def numpy = PyModule('numpy')
-          def sklearn = PyModule('sklearn')
-          def matplotlib = PyModule('matplotlib')
-          def seaborn = PyModule('seaborn')
+          def pymongo = library('pymongo')
+          def pandas = library('pandas')
+          def numpy = library('numpy')
+          def sklearn = library('sklearn')
+          def matplotlib = library('matplotlib')
+          def seaborn = library('seaborn')
 
           // Connect to MongoDB
-          def client = pymongo.PyMongo().MongoClient()
+          def client = pymongo.MongoClient()
           def database_name = 'amazon_reviews'
           def collection_name = 'gift_cards'
-          def db = client[database_name]
-          def collection = db[collection_name]
+          def db = client.getDatabase(database_name)
+          def collection = db.getCollection(collection_name)
 
           // Download and extract the dataset
           def url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
           def filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-          bat "curl -O $url"
-          bat "gzip -d $filename"
-          bat "more +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv"
+          sh "curl -O $url"
+          sh "gzip -d $filename"
+          sh "tail -n +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv"
 
           // Process the dataset and insert into MongoDB
           def file = new File('amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv')
           def rows = file.readLines().drop(1) // skip header row
           for (int i = 0; i < rows.size(); i++) {
             def row = rows[i].split('\t')
-            def document = BasicDBObject()
+            def document = new BasicDBObject()
             document.put('marketplace', row[0])
             document.put('customer_id', row[1])
             document.put('review_id', row[2])
