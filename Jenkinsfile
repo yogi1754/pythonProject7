@@ -32,26 +32,26 @@ pipeline {
     '''
       
     // Connect to MongoDB
-    def mongo_client = new MongoClient()
+    def mongo_client = MongoClient()
     def db_name = 'amazon_reviews'
     def collection_name = 'gift_cards'
     def mongo_db = mongo_client.getDatabase(db_name)
     def collection = mongo_db.getCollection(collection_name)
       
     // Download and extract the dataset
-    def reader = new CSVReader(new FileReader("${filename}"), '\t')
+    def reader = CSVReader(FileReader("${filename}"), '\t')
     def i = 0
     def json_row
     while ((json_row = reader.readNext()) != null && i < 1010) {
-      collection.insertOne(Document.parse(new JSONObject(json_row).toString()))
+      collection.insertOne(Document.parse(JSONObject(json_row).toString()))
       i++
     }
       
     // Load data from MongoDB into a Pandas DataFrame
     def cursor = collection.find()
-    List<Document> documents = new ArrayList<Document>()
+    List<Document> documents = ArrayList<Document>()
     cursor.into(documents)
-    def df = new DataFrame(documents)
+    def df = DataFrame(documents)
       
     // Clean and normalize data
     df = df.drop("_id")
