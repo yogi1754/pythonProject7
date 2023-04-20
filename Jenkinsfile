@@ -42,12 +42,13 @@ collection = db[collection_name]
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
-with gzip.open(filename, 'rt', encoding='utf-8') as f:
+with(gzip.open(filename, 'rt', encoding='utf-8')) {
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
         collection.insert_one(json.loads(json.dumps(row)))
         if i == 1010:
             break
+}
 
      
 
