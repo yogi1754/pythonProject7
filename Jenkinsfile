@@ -22,12 +22,12 @@ pipeline {
             steps {
                 script {
                     // Import required modules and libraries
-                    def pymongo = new PyModule('pymongo')
-                    def pandas = new PyModule('pandas')
-                    def numpy = new PyModule('numpy')
-                    def sklearn = new PyModule('sklearn')
-                    def matplotlib = new PyModule('matplotlib')
-                    def seaborn = new PyModule('seaborn')
+                    def pymongo = PyModule('pymongo')
+                    def pandas = PyModule('pandas')
+                    def numpy = PyModule('numpy')
+                    def sklearn = PyModule('sklearn')
+                    def matplotlib = PyModule('matplotlib')
+                    def seaborn = PyModule('seaborn')
                     
                     // Connect to MongoDB
                     def client = pymongo.PyMongo().MongoClient()
