@@ -5,11 +5,11 @@ pipeline {
         stage('Install Packages') {
             steps {
                 bat 'Py -m pip install pymongo' 
-		bat 'Py install pandas'
-		bat 'Py install numpy' 
-		bat 'Py install scikit-learn' 
-		bat 'Py install matplotlib' 
-		bat 'Py install seaborn'
+		bat 'Py -m pip install pandas'
+		bat 'Py -m pip install numpy' 
+		bat 'Py -m pip install scikit-learn' 
+		bat 'Py -m pip install matplotlib' 
+		bat 'Py -m pip install seaborn'
             }
         }
         
