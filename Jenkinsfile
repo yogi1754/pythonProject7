@@ -28,7 +28,7 @@ pipeline {
   steps {
     // Import required modules and libraries
     bat '''
-    Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn org.bson.Document
+    Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn org.bson.Document com.mongodb.client.model.Filters.* com.mongodb.client.MongoClients com.mongodb.client.MongoCollection com.mongodb.client.MongoClient com.mongodb.client.MongoDatabase com.mongodb.client.model.Filters com.mongodb.client.model.Updates com.mongodb.client.result.DeleteResult com.mongodb.client.result.UpdateResult com.mongodb.BasicDBObject com.mongodb.DBObject com.mongodb.util.JSON com.mongodb.MongoCredential com.mongodb.MongoClientURI com.mongodb.MongoClientOptions
     '''
       
     // Connect to MongoDB
