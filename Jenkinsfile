@@ -82,23 +82,23 @@ pipeline {
         }
 
         // Load data from MongoDB into a Pandas DataFrame
-        df = pd.DataFrame(list(collection.find()))
+        rome = pd.DataFrame(list(collection.find()))
 
         // Clean and normalize data
-        df = df.drop("_id")
-        df['review_date'] = pd.to_datetime(df['review_date'])
-        df['star_rating'] = pd.to_numeric(df['star_rating'], errors = 'coerce')
-        df = df.dropna()
+        rome = rome.drop("_id")
+        rome['review_date'] = pd.to_datetime(rome['review_date'])
+        rome['star_rating'] = pd.to_numeric(rome['star_rating'], errors = 'coerce')
+        rome = rome.dropna()
 
         // Perform data transformation
-        df['log_rating'] = np.log(df['star_rating'])
+        rome['log_rating'] = np.log(rome['star_rating'])
 
         // Handle outliers
-        def q1, q3 = np.percentile(df['log_rating'], [25, 75])
+        def q1, q3 = np.percentile(rome['log_rating'], [25, 75])
         def iqr = q3 - q1
         def lower_bound = q1 - (1.5 * iqr)
         def upper_bound = q3 + (1.5 * iqr)
-        df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
+        rome = rome[(rome['log_rating'] >= lower_bound) & (rome['log_rating'] <= upper_bound)]
 
         // Connect to SQL Server
         def cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
@@ -108,7 +108,7 @@ pipeline {
         cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_parent varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, helpful_votes int, total_votes int, vine varchar(255), verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
 
         // Insert data into SQL table
-        for (def row: df.iterrows()) {
+        for (def row: rome.iterrows()) {
           cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_parent'], row['product_title'], row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['vine'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
         }
@@ -119,7 +119,7 @@ pipeline {
         cnxn.close()
 
         // Visualize the data using a scatter plot
-        plt.scatter(df['review_date'], df['log_rating'])
+        plt.scatter(rome['review_date'], rome['log_rating'])
         plt.title("Logarithm of Rating Over Time")
         plt.xlabel("review_date")
         plt.ylabel("Logarithm of Rating")
@@ -127,7 +127,7 @@ pipeline {
         plt.close()
 
         // Create a bar chart of the count of reviews by gift card category
-        category_counts = df.groupby('product_category')['review_id'].count()
+        category_counts = rome.groupby('product_category')['review_id'].count()
         plt.bar(category_counts.index, category_counts.values)
         plt.title("Number of Reviews by Gift Card Category")
         plt.xlabel("Gift Card Category")
@@ -137,14 +137,14 @@ pipeline {
         plt.close()
 
         // Create a scatter plot matrix of the numerical variables in the dataset
-        sns.pairplot(df.select_dtypes(include = [np.number]))
+        sns.pairplot(rome.select_dtypes(include = [np.number]))
         plt.suptitle("Scatter Plot Matrix")
         plt.savefig('https://github.com/yogi1754/pythonProject7.git/scatter_plot_matrix.png')
         plt.close()
 
         // Create a time series plot of the average star rating per month
-        df['year_month'] = df['review_date'].dt.to_period('M')
-        monthly_avg_rating = df.groupby('year_month')['star_rating'].mean()
+        df['year_month'] = rome['review_date'].dt.to_period('M')
+        monthly_avg_rating = rome.groupby('year_month')['star_rating'].mean()
         plt.plot(monthly_avg_rating.index.to_timestamp(), monthly_avg_rating.values)
         plt.title("Average Star Rating per Month")
         plt.xlabel("Month")
@@ -153,12 +153,12 @@ pipeline {
         plt.close()
 
         // Fit a linear regression model
-        X = df[['review_date']].astype(int)
-        y = df['star_rating']
+        X = rome[['review_date']].astype(int)
+        y = rome['star_rating']
         model = LinearRegression().fit(X, y)
 
         // Create a histogram of star ratings
-        plt.hist(df['star_rating'], bins = 5)
+        plt.hist(rome['star_rating'], bins = 5)
         plt.title("Histogram of Star Ratings")
         plt.xlabel("Star Ratings")
         plt.ylabel("Count")
@@ -166,7 +166,7 @@ pipeline {
         plt.close()
 
         // Create a bar chart of the count of reviews by gift card category
-        def category_counts = df.groupby('product_category')['review_id'].count()
+        def category_counts = rome.groupby('product_category')['review_id'].count()
         plt.bar(category_counts.index, category_counts.values)
         plt.title("Number of Reviews by Gift Card Category")
         plt.xlabel("Gift Card Category")
