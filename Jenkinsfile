@@ -74,8 +74,8 @@ pipeline {
                     def count = collection.countDocuments()
                     println("Inserted $count documents into the '$collection_name' collection.")
                 }
-            }
-        }
+           
+       
  
 
 // Load data from MongoDB into a Pandas DataFrame
