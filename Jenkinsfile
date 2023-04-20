@@ -27,15 +27,7 @@ pipeline {
         stage('Data Processing') {
             steps {
                 bat '''
-                    python3 - <<EOF
-                    import csv
-                    import json
-                    from pymongo import MongoClient
-                    import pandas as pd
-                    import numpy as np
-                    from sklearn.linear_model import LinearRegression
-                    import matplotlib.pyplot as plt
-                    import seaborn as sns
+    python -c "import csv; import json; from pymongo import MongoClient; import pandas as pd; import numpy as np; from sklearn.linear_model import LinearRegression; import matplotlib.pyplot as plt; import seaborn as sns;"
 
                     # Connect to MongoDB
 		    client = MongoClient()
