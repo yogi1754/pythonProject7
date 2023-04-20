@@ -28,7 +28,7 @@ pipeline {
   steps {
     // Import required modules and libraries
     bat '''
-    Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn
+    Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn org.bson.Document
     '''
       
     // Connect to MongoDB
