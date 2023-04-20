@@ -10,12 +10,10 @@ pipeline {
 
     stage('Download and Extract Dataset') {
       steps {
-        bat ''
-        '
+        bat '''
         curl - O https: //s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
           gzip - d amazon_reviews_us_Gift_Card_v1_00.tsv.gz
-        more + 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv ''
-        '
+        more + 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv '''
       }
     }
 
