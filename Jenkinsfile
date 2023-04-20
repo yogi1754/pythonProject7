@@ -44,7 +44,7 @@ filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
 with(gzip.open(filename, 'rt', encoding='utf-8')) {
     reader = csv.DictReader(self)
-    for i, row in enumerate(reader):
+    for (i, row in enumerate(reader)):
         collection.insert_one(json.loads(json.dumps(row)))
         if i == 1010:
             break
