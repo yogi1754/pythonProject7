@@ -20,8 +20,8 @@ pipeline {
             import gzip
             import shutil
             with gzip.open('amazon_reviews_us_Gift_Card_v1_00.tsv.gz', 'rb') as f_in:
-                with open('amazon_reviews_us_Gift_Card_v1_00.tsv', 'wb') as f_out:
-                    shutil.copyfileobj(f_in, f_out)
+            with open('amazon_reviews_us_Gift_Card_v1_00.tsv', 'wb') as f_out:
+            shutil.copyfileobj(f_in, f_out)
         }
         bat 'head -n 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv'
                }
