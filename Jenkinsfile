@@ -16,11 +16,10 @@ pipeline {
 stage('Download and Extract Dataset') {
     steps {
         bat '''
-            #!/bin/bash
-            curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz
-            gunzip -c amazon_reviews_us_Gift_Card_v1_00.tsv.gz > amazon_reviews_us_Gift_Card_v1_00.tsv
-            head -n 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv
-        '''
+      @echo off
+      curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
+      gzip -d amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
+      more +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv 
     }
 }
 
