@@ -31,7 +31,7 @@ pipeline {
     Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn org.bson.Document com.mongodb.client.model.Filters.* com.mongodb.client.MongoClients com.mongodb.client.MongoCollection com.mongodb.client.MongoClient com.mongodb.client.MongoDatabase com.mongodb.client.model.Filters com.mongodb.client.model.Updates com.mongodb.client.result.DeleteResult com.mongodb.client.result.UpdateResult com.mongodb.BasicDBObject com.mongodb.DBObject com.mongodb.util.JSON com.mongodb.MongoCredential com.mongodb.MongoClientURI com.mongodb.MongoClientOptions
     '''
       
- // Connect to MongoDB
+// Connect to MongoDB
 client = pymongo.MongoClient()
 database_name = 'amazon_reviews'
 collection_name = 'gift_cards'
@@ -42,14 +42,12 @@ collection = db[collection_name]
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
-with(gzip.open(filename, 'rt', encoding='utf-8')) {
+with(gzip.open(filename, 'rt', encoding='utf-8')) as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
         collection.insert_one(json.loads(json.dumps(row)))
         if i == 1010:
             break
-}
-
      
 
 // Load data from MongoDB into a Pandas DataFrame
