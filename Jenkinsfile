@@ -4,19 +4,13 @@ pipeline {
     stages {
         stage('Install Packages') {
             steps {
-                bat 'Py -m pip install pymongo' 
-		bat 'Py -m pip install pandas'
-		bat 'Py -m pip install numpy' 
-		bat 'Py -m pip install scikit-learn' 
-		bat 'Py -m pip install matplotlib' 
-		bat 'Py -m pip install seaborn'
+                bat 'Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn'
             }
         }
         
-  stage('Download and Extract Dataset') {
+        stage('Download and Extract Dataset') {
             steps {
                 bat '''
-                    @echo off
                     curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
                     gzip -d amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
                     more +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv 
@@ -24,31 +18,65 @@ pipeline {
             }
         }
 
-      stage('Data Processing') {
-  steps {
-    // Import required modules and libraries
-    bat '''
-    Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn org.bson.Document com.mongodb.client.model.Filters.* com.mongodb.client.MongoClients com.mongodb.client.MongoCollection com.mongodb.client.MongoClient com.mongodb.client.MongoDatabase com.mongodb.client.model.Filters com.mongodb.client.model.Updates com.mongodb.client.result.DeleteResult com.mongodb.client.result.UpdateResult com.mongodb.BasicDBObject com.mongodb.DBObject com.mongodb.util.JSON com.mongodb.MongoCredential com.mongodb.MongoClientURI com.mongodb.MongoClientOptions
-    '''
-      
-// Connect to MongoDB
-client = pymongo.MongoClient()
-database_name = 'amazon_reviews'
-collection_name = 'gift_cards'
-db = client[database_name]
-collection = db[collection_name]
-
-// Download and extract the dataset
-url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-urllib.request.urlretrieve(url, filename)
-with(gzip.open(filename, 'rt', encoding='utf-8')) {
-    reader = csv.DictReader(self)
-    for (int i=0, row in enumerate(reader)):
-        collection.insert_one(json.loads(json.dumps(row)))
-        if i == 1010:
-            break
-}
+        stage('Data Processing') {
+            steps {
+                script {
+                    // Import required modules and libraries
+                    def pymongo = new PyModule('pymongo')
+                    def pandas = new PyModule('pandas')
+                    def numpy = new PyModule('numpy')
+                    def sklearn = new PyModule('sklearn')
+                    def matplotlib = new PyModule('matplotlib')
+                    def seaborn = new PyModule('seaborn')
+                    
+                    // Connect to MongoDB
+                    def client = pymongo.PyMongo().MongoClient()
+                    def database_name = 'amazon_reviews'
+                    def collection_name = 'gift_cards'
+                    def db = client[database_name]
+                    def collection = db[collection_name]
+                    
+                    // Download and extract the dataset
+                    def url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
+                    def filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
+                    bat "curl -O $url"
+                    bat "gzip -d $filename"
+                    bat "more +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv"
+                    
+                    // Process the dataset and insert into MongoDB
+                    def file = new File('amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv')
+                    def rows = file.readLines().drop(1) // skip header row
+                    for (int i = 0; i < rows.size(); i++) {
+                        def row = rows[i].split('\t')
+                        def document = new BasicDBObject()
+                        document.put('marketplace', row[0])
+                        document.put('customer_id', row[1])
+                        document.put('review_id', row[2])
+                        document.put('product_id', row[3])
+                        document.put('product_parent', row[4])
+                        document.put('product_title', row[5])
+                        document.put('product_category', row[6])
+                        document.put('star_rating', row[7])
+                        document.put('helpful_votes', row[8])
+                        document.put('total_votes', row[9])
+                        document.put('vine', row[10])
+                        document.put('verified_purchase', row[11])
+                        document.put('review_headline', row[12])
+                        document.put('review_body', row[13])
+                        document.put('review_date', row[14])
+                        collection.insertOne(pandas.DataFrame(document))
+                        if (i == 1000) { // insert only 1000 documents for testing
+                            break
+                        }
+                    }
+                    
+                    // Print the number of documents in the collection
+                    def count = collection.countDocuments()
+                    println("Inserted $count documents into the '$collection_name' collection.")
+                }
+            }
+        }
+ 
 
 // Load data from MongoDB into a Pandas DataFrame
 df = pd.DataFrame(list(collection.find()))
