@@ -80,8 +80,6 @@ pipeline {
 
 // Load data from MongoDB into a Pandas DataFrame
 df = pd.DataFrame(list(collection.find()))
-
-
       
     // Clean and normalize data
     df = df.drop("_id")
@@ -199,8 +197,8 @@ stage('Push Results to GitHub') {
 stage('Publish Results') {
   steps {
     publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'figures', reportFiles: 'log_rating_over_time.png, violinplot_star_ratings.png'])
-  }
-}
-        
     }
+  }
+        
+ }
 }
