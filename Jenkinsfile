@@ -47,11 +47,13 @@ pipeline {
       i++
     }
       
-    // Load data from MongoDB into a Pandas DataFrame
-    def cursor = collection.find()
-    List<Document> documents = ArrayList<Document>()
-    cursor.into(documents)
-    def df = DataFrame(documents)
+    
+   // Load data from MongoDB into a Pandas DataFrame
+def cursor = collection.find()
+List<Document> documents = new ArrayList()
+cursor.into(documents)
+def df = DataFrame(documents)
+
       
     // Clean and normalize data
     df = df.drop("_id")
