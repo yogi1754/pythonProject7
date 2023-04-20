@@ -24,63 +24,67 @@ pipeline {
             }
         }
 
-       stage('Data Processing') {
-    steps {
-        // Import required modules and libraries
-        bat '''
-        Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn
-   
-        // Connect to MongoDB
-        def mongo_client = new MongoClient()
-        def db_name = 'amazon_reviews'
-        def collection_name = 'gift_cards'
-        def mongo_db = mongo_client.getDatabase(db_name)
-        def collection = mongo_db.getCollection(collection_name)
-        // Download and extract the dataset
-        def reader = new CSVReader(new FileReader("${filename}"), '\t')
-        def i = 0
-        def json_row
-        while ((json_row = reader.readNext()) != null && i < 1010) {
-            collection.insertOne(Document.parse(new JSONObject(json_row).toString()))
-            i++
-        }
-	    
-        // Load data from MongoDB into a Pandas DataFrame
-        def cursor = collection.find()
-        List<Document> documents = new ArrayList<Document>()
-        cursor.into(documents)
-        def df = new DataFrame(documents)
-	    
-        // Clean and normalize data
-        df = df.drop("_id")
-        df['review_date'] = pd.to_datetime(df['review_date'])
-        df['star_rating'] = pd.to_numeric(df['star_rating'], errors='coerce')
-        df = df.dropna()
-	    
-        // Perform data transformation
-        df['log_rating'] = np.log(df['star_rating'])
-	    
-        // Handle outliers
-        def q1, q3 = np.percentile(df['log_rating'], [25, 75])
-        def iqr = q3 - q1
-        def lower_bound = q1 - (1.5 * iqr)
-        def upper_bound = q3 + (1.5 * iqr)
-        df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
+      stage('Data Processing') {
+  steps {
+    // Import required modules and libraries
+    bat '''
+    Py -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn
+    '''
+      
+    // Connect to MongoDB
+    def mongo_client = new MongoClient()
+    def db_name = 'amazon_reviews'
+    def collection_name = 'gift_cards'
+    def mongo_db = mongo_client.getDatabase(db_name)
+    def collection = mongo_db.getCollection(collection_name)
+      
+    // Download and extract the dataset
+    def reader = new CSVReader(new FileReader("${filename}"), '\t')
+    def i = 0
+    def json_row
+    while ((json_row = reader.readNext()) != null && i < 1010) {
+      collection.insertOne(Document.parse(new JSONObject(json_row).toString()))
+      i++
+    }
+      
+    // Load data from MongoDB into a Pandas DataFrame
+    def cursor = collection.find()
+    List<Document> documents = new ArrayList<Document>()
+    cursor.into(documents)
+    def df = new DataFrame(documents)
+      
+    // Clean and normalize data
+    df = df.drop("_id")
+    df['review_date'] = pd.to_datetime(df['review_date'])
+    df['star_rating'] = pd.to_numeric(df['star_rating'], errors='coerce')
+    df = df.dropna()
+      
+    // Perform data transformation
+    df['log_rating'] = np.log(df['star_rating'])
+      
+    // Handle outliers
+    def q1, q3 = np.percentile(df['log_rating'], [25, 75])
+    def iqr = q3 - q1
+    def lower_bound = q1 - (1.5 * iqr)
+    def upper_bound = q3 + (1.5 * iqr)
+    df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
+    
+    // Connect to SQL Server
+    def cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
+    def cursor = cnxn.cursor()
+    
+    // Create SQL table for data
+    cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_parent varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, helpful_votes int, total_votes int, vine varchar(255), verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
+    
+    // Insert data into SQL table
+    for index, row in df.iterrows() {
+      cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                  row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_parent'], row['product_title'], row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['vine'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
+    }
+    cnxn.commit()
 
-        // Connect to SQL Server
-		    cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=YOGESH\\SQLEXPRESS;DATABASE=database_name')
-		    cursor = cnxn.cursor()
-  
-		    // Create SQL table for data
-		    cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_parent varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, helpful_votes int, total_votes int, vine varchar(255), verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
 
-		    // Insert data into SQL table
-		    for index, row in df.iterrows():
- 		    cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                    row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_parent'], row['product_title'], row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['vine'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
-		    cnxn.commit()
-  
-		    # Close the SQL connection
+		    // Close the SQL connection
 		    cursor.close()
 		    cnxn.close()
 
@@ -149,8 +153,8 @@ pipeline {
       
       // Close the MongoDB connection
       client.close()
-      "
-    '''
+      
+    
   }
 }
 
