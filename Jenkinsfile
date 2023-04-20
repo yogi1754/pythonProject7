@@ -82,7 +82,7 @@ pipeline {
         }
 
         // Load data from MongoDB into a Pandas DataFrame
-        rome = pd.DataFrame(list(collection.find()))
+         rome = pd.DataFrame(list(documents))
 
         // Clean and normalize data
         rome = rome.drop("_id")
