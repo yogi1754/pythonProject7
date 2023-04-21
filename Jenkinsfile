@@ -54,20 +54,20 @@ pipeline {
             """, returnStdout: true).trim()
             env.DATAFRAME_JSON = df
         
-            def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
-            df['review_date'] = pd.to_datetime(df['review_date'])
-            df['star_rating'] = pd.to_numeric(df['star_rating'], errors = 'coerce')
-            df = df.dropna()
-            df['log_rating'] = np.log(df['star_rating'])
-            q1 = np.percentile(df['log_rating'], 25)
-            q3 = np.percentile(df['log_rating'], 75)
+            def df1 = JsonSlurper().parseText(env.DATAFRAME_JSON)
+            df1['review_date'] = pd.to_datetime(df['review_date'])
+            df1['star_rating'] = pd.to_numeric(df['star_rating'], errors = 'coerce')
+            df1 = df1.dropna()
+            df1['log_rating'] = np.log(df['star_rating'])
+            q1 = np.percentile(df1['log_rating'], 25)
+            q3 = np.percentile(df1['log_rating'], 75)
             iqr = q3 - q1
             lower_bound = q1 - (1.5 * iqr)
             upper_bound = q3 + (1.5 * iqr)
-            df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
-            env.DATAFRAME_JSON = df.to_json()
+            df1 = df1[(df1['log_rating'] >= lower_bound) & (df1['log_rating'] <= upper_bound)]
+            env.DATAFRAME_JSON = df1.to_json()
 
-            def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
+            def df2 = JsonSlurper().parseText(env.DATAFRAME_JSON)
             def connectionString = "Driver=SQL Server;Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=yes;"
             def connection = Sql.newInstance(connectionString)
             connection.execute("""
@@ -89,7 +89,7 @@ pipeline {
                     review_date DATE
                 )
             """)
-            df.each { row ->
+            df2.each { row ->
                 def values = []
                 values << row['marketplace']
                 values << row['customer_id']
