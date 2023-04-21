@@ -2,7 +2,6 @@ import urllib.request
 import gzip
 import csv
 import json
-import pyodbc as pyodbc
 import pymongo as pymongo
 import pandas as pd
 import numpy as np
