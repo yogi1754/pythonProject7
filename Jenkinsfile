@@ -177,6 +177,7 @@ pipeline {
 
         // Close the MongoDB connection
         client.close()
+        }
 
       }
     }
@@ -195,4 +196,5 @@ pipeline {
       }
     }
 
+  }
   }
