@@ -119,6 +119,4 @@ stage('Download and insert dataset into MongoDB') {
     }
 }
 }
-}
-}
-}
+
