@@ -86,8 +86,7 @@ pipeline {
             def df = new JsonSlurper().parseText(env.DATAFRAME_JSON)
             def connectionString = "Driver=SQL Server;Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=yes;"
             def connection = Sql.newInstance(connectionString)
-            connection.execute(""
-              "
+            connection.execute("""
               CREATE TABLE gift_card_reviews(
                 marketplace VARCHAR(255),
                 customer_id VARCHAR(255),
@@ -130,8 +129,7 @@ pipeline {
                       review_date,
                       log_rating
                     ) VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )
-                    ""
-                    ", [
+                    """, [
                     row.marketplace,
                     row.customer_id,
                     row.review_id,
