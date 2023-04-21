@@ -16,8 +16,6 @@ agent any
     stage('Data Processing') {
       steps {
         script{
-          
-            py -m pip install pymongo
                     python <<EOF
                     import csv
                     import gzip
