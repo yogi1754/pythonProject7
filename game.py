@@ -2,7 +2,7 @@ import urllib.request
 import gzip
 import csv
 import json
-import pyodbc as pyodbc
+import pyodbc as hr
 import pymongo as pymongo
 import pandas as pd
 import numpy as np
@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Connect to MongoDB
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient()
 database_name = 'amazon_reviews'
 collection_name = 'gift_cards'
 db = client[database_name]
@@ -49,7 +49,7 @@ df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
 # Connect to SQL Server database
 server_name = 'localhost\\SQLEXPRESS'
 database_name = 'master'
-cnxn = pyodbc.connect(f'Driver=SQL Server;Server={server_name};Database={database_name};Trusted_Connection=yes;')
+cnxn = hr.connect(f'Driver=SQL Server;Server={server_name};Database={database_name};Trusted_Connection=yes;')
 cursor = cnxn.cursor()
 
 # Create gift_card_reviews table
