@@ -177,14 +177,6 @@ pipeline {
         }
       }
     }
-
-    stage('Push Results to GitHub') {
-      steps {
-        git branch: 'master', url: 'https://github.com/yogi1754/pythonProject7.git'
-        bat 'cp -r ./output/* ./new-project/'
-        bat 'cd ./new-project && git add . && git commit -m "Update results" && git push'
-      }
-    }
   }
 }
 }
