@@ -52,7 +52,7 @@ database_name = 'master'
 username = 'yogesh'
 password = 'Welcome123#'
 
-cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
+cnxn = hr.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 
 cursor = cnxn.cursor()
 
