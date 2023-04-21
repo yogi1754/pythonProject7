@@ -2,15 +2,15 @@ import urllib.request
 import gzip
 import csv
 import json
-from pymongo import MongoClient
+import pyodbc as pyodbc
+import pymongo as pymongo
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Connect to MongoDB
-client = MongoClient()
+client = pymongo.MongoClient()
 database_name = 'amazon_reviews'
 collection_name = 'gift_cards'
 db = client[database_name]
@@ -23,9 +23,9 @@ urllib.request.urlretrieve(url, filename)
 with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
+        collection.insert_one(json.loads(json.dumps(row)))
         if i == 1010:
             break
-        collection.insert_one(json.loads(json.dumps(row)))
 
 # Load data from MongoDB into a Pandas DataFrame
 df = pd.DataFrame(list(collection.find()))
@@ -38,29 +38,48 @@ df = df.dropna()
 # Perform data transformation
 df['log_rating'] = np.log(df['star_rating'])
 
-# Perform linear regression on the data
-model = LinearRegression()
-days_since_start = (df['review_date'] - df['review_date'].min()).dt.days
-X = days_since_start.values.reshape(-1, 1)
-y = df['log_rating']
-model.fit(X, y)
-print("Coefficients:", model.coef_)
-print("Intercept:", model.intercept_)
+# Handle outliers
+q1, q3 = np.percentile(df['log_rating'], [25, 75])
+iqr = q3 - q1
+lower_bound = q1 - (1.5 * iqr)
+upper_bound = q3 + (1.5 * iqr)
+df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
+
+
+# Connect to SQL Server database
+server_name = 'localhost\\SQLEXPRESS'
+database_name = 'master'
+cnxn = pyodbc.connect(f'Driver=SQL Server;Server={server_name};Database={database_name};Trusted_Connection=yes;')
+cursor = cnxn.cursor()
+
+# Create gift_card_reviews table
+cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_parent varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, helpful_votes int, total_votes int, vine varchar(255), verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
+
+# Insert data into SQL table
+for index, row in df.iterrows():
+ cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+  row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_parent'], row['product_title'], row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['vine'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
+cnxn.commit()
+
+# Close the SQL connection
+cursor.close()
+cnxn.close()
 
 # Visualize the data using a scatter plot
 plt.scatter(df['review_date'], df['log_rating'])
 plt.title("Logarithm of Rating Over Time")
 plt.xlabel("review_date")
 plt.ylabel("Logarithm of Rating")
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/logarithm_of_rating_over_time.png')
+plt.close()
 
 # Create a histogram of star ratings
 plt.hist(df['star_rating'], bins=5)
 plt.title("Histogram of Star Ratings")
 plt.xlabel("Star Ratings")
 plt.ylabel("Count")
-
-plt.show()
-
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/histogram_of_star_ratings.png')
+plt.close()
 
 # Create a bar chart of the count of reviews by gift card category
 category_counts = df.groupby('product_category')['review_id'].count()
@@ -69,15 +88,14 @@ plt.title("Number of Reviews by Gift Card Category")
 plt.xlabel("Gift Card Category")
 plt.ylabel("Number of Reviews")
 plt.xticks(rotation=90)
-
-plt.show()
-
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/number_of_reviews_by_gift_card_category.png')
+plt.close()
 
 # Create a scatter plot matrix of the numerical variables in the dataset
 sns.pairplot(df.select_dtypes(include=[np.number]))
 plt.suptitle("Scatter Plot Matrix")
-plt.show()
-
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/scatter_plot_matrix.png')
+plt.close()
 
 # Create a time series plot of the average star rating per month
 df['year_month'] = df['review_date'].dt.to_period('M')
@@ -86,30 +104,8 @@ plt.plot(monthly_avg_rating.index.to_timestamp(), monthly_avg_rating.values)
 plt.title("Average Star Rating per Month")
 plt.xlabel("Month")
 plt.ylabel("Average Star Rating")
-
-plt.show()
-
-
-# Add regression line to the plot
-plt.plot(df['review_date'], model.predict(X), color='red')
-
-# Create a heatmap of the correlation matrix
-sns.heatmap(df.select_dtypes(include=[np.number]).corr(), annot=True, cmap='coolwarm')
-plt.title("Correlation Matrix Heatmap")
-
-plt.show()
-
-# Create a boxplot of the star ratings
-sns.boxplot(x='star_rating', data=df)
-plt.title("Boxplot of Star Ratings")
-
-plt.show()
-
-# Create a violinplot of the star ratings
-sns.violinplot(x='star_rating', data=df)
-plt.title("Violinplot of Star Ratings")
-
-plt.show()
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/average_star_rating_per_month.png')
+plt.close()
 
 # Close the MongoDB connection
 client.close()
