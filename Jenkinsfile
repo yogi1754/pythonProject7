@@ -5,12 +5,14 @@ pipeline {
   stages {
     stage('Start MongoDB') {
       steps {
+        script {
         withMongodb([mongodbInstallation('mongodb')]) {
           mongodb.withServer {
             sh 'mongod --fork --logpath /var/log/mongodb.log --dbpath /var/lib/mongodb'
           }
         }
       }
+    }
     }
     stage('Download and extract dataset') {
       steps {
