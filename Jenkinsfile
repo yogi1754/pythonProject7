@@ -185,12 +185,6 @@ pipeline {
         bat 'cd ./new-project && git add . && git commit -m "Update results" && git push'
       }
     }
-
-    stage('Publish Results') {
-      steps {
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'figures', reportFiles: 'log_rating_over_time.png, violinplot_star_ratings.png'])
-      }
-    }
   }
 }
 }
