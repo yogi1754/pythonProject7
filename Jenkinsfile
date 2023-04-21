@@ -16,6 +16,16 @@ agent any
     stage('Data Processing') {
       steps {
         script{
+          
+            import csv
+                    import json
+                    from pymongo import MongoClient
+                    import pandas as pd
+                    import numpy as np
+                    from sklearn.linear_model import LinearRegression
+                    import matplotlib.pyplot as plt
+                    import seaborn as sns
+          
           // Connect to MongoDB
           def client = pymongo.MongoClient()
           def database_name = 'amazon_reviews'
