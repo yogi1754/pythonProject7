@@ -4,12 +4,12 @@ agent any
   stages {
     stage('Install Packages') {
       steps {
-        bat 'python -m pip install pymongo'
-        bat 'python -m pip install pandas'
-        bat 'python -m pip install numpy'
-        bat 'python -m pip install scikit-learn'
-        bat 'python -m pip install matplotlib'
-        bat 'python -m pip install seaborn'
+        bat 'py -m pip install pymongo'
+        bat 'py -m pip install pandas'
+        bat 'py -m pip install numpy'
+        bat 'py -m pip install scikit-learn'
+        bat 'py -m pip install matplotlib'
+        bat 'py -m pip install seaborn'
       }
     }
 
