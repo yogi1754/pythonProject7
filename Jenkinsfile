@@ -80,77 +80,53 @@ pipeline {
         }
       }
 
-      stage('Insert data into SQL Server') {
-        steps {
-          script {
-            def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
+     stage('Insert data into SQL Server') {
+    steps {
+        script {
+            def df = new JsonSlurper().parseText(env.DATAFRAME_JSON)
             def connectionString = "Driver=SQL Server;Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=yes;"
             def connection = Sql.newInstance(connectionString)
             connection.execute("""
-              CREATE TABLE gift_card_reviews(
-                marketplace VARCHAR(255),
-                customer_id VARCHAR(255),
-                review_id VARCHAR(255),
-                product_id VARCHAR(255),
-                product_parent VARCHAR(255),
-                product_title VARCHAR(255),
-                product_category VARCHAR(255),
-                star_rating FLOAT,
-                helpful_votes INT,
-                total_votes INT,
-                vine VARCHAR(255),
-                verified_purchase VARCHAR(255),
-                review_headline VARCHAR(255),
-                review_body VARCHAR(MAX),
-                review_date DATETIME,
-                log_rating FLOAT
-              )
-              ""
-              ")
-              df.each {
-                row ->
-                  connection.execute(""
-                    "
-                    INSERT INTO gift_card_reviews(
-                      marketplace,
-                      customer_id,
-                      review_id,
-                      product_id,
-                      product_parent,
-                      product_title,
-                      product_category,
-                      star_rating,
-                      helpful_votes,
-                      total_votes,
-                      vine,
-                      verified_purchase,
-                      review_headline,
-                      review_body,
-                      review_date,
-                      log_rating
-                    ) VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )
-                    """, [
-                    row.marketplace,
-                    row.customer_id,
-                    row.review_id,
-                    row.product_id,
-                    row.product_parent,
-                    row.product_title,
-                    row.product_category,
-                    row.star_rating,
-                    row.helpful_votes,
-                    row.total_votes,
-                    row.vine,
-                    row.verified_purchase,
-                    row.review_headline,
-                    row.review_body,
-                    row.review_date,
-                    row.log_rating
-                  ])
+                CREATE TABLE gift_card_reviews (
+                    marketplace VARCHAR(255),
+                    customer_id VARCHAR(255),
+                    review_id VARCHAR(255) PRIMARY KEY,
+                    product_id VARCHAR(255),
+                    product_parent VARCHAR(255),
+                    product_title VARCHAR(255),
+                    product_category VARCHAR(255),
+                    star_rating INT,
+                    helpful_votes INT,
+                    total_votes INT,
+                    vine VARCHAR(255),
+                    verified_purchase VARCHAR(255),
+                    review_headline VARCHAR(255),
+                    review_body TEXT,
+                    review_date DATE
+                )
+            """)
+            df.each { row ->
+                def values = []
+                values << row['marketplace']
+                values << row['customer_id']
+                values << row['review_id']
+                values << row['product_id']
+                values << row['product_parent']
+                values << row['product_title']
+                values << row['product_category']
+                values << row['star_rating']
+                values << row['helpful_votes']
+                values << row['total_votes']
+                values << row['vine']
+                values << row['verified_purchase']
+                values << row['review_headline']
+                values << row['review_body']
+                values << row['review_date']
+                def sql = "INSERT INTO gift_card_reviews VALUES (" + values.collect { "'${it}'" }.join(',') + ")"
+                connection.execute(sql)
             }
-
-            connection.close()
-          }
+            connection.close(message: 'Closing SQL Server connection')
         }
-      }
     }
+}
+
