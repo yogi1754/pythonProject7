@@ -1,4 +1,4 @@
-py -m pip3 install pyodbc
+bat'py -m pip3 install pyodbc'
 import urllib.request
 import gzip
 import csv
