@@ -1,21 +1,6 @@
-pipeline {
-  agent any
-  
-  stages {
-    stage('Install Packages') {
+  stage('Data Processing') {
       steps {
-        bat 'py -m pip install pymongo'
-        bat 'py -m pip install pandas'
-        bat 'py -m pip install numpy'
-        bat 'py -m pip install scikit-learn'
-        bat 'py -m pip install matplotlib'
-        bat 'py -m pip install seaborn'
-      }
-    }
-
-    stage('Data Processing') {
-      steps {
-        bat'''
+        script{
           // Import required modules and libraries
           def pymongo = library('pymongo')
           def pandas = library('pandas')
@@ -43,7 +28,7 @@ pipeline {
           def rows = file.readLines().drop(1) // skip header row
           for (int i = 0; i < rows.size(); i++) {
             def row = rows[i].split('\t')
-            def document = BasicDBObject()
+            def document = new BasicDBObject()
             document.put('marketplace', row[0])
             document.put('customer_id', row[1])
             document.put('review_id', row[2])
@@ -59,22 +44,24 @@ pipeline {
             document.put('review_headline', row[12])
             document.put('review_body', row[13])
             document.put('review_date', row[14])
-            collection.insertOne(pandas.DataFrame(document))
+            collection.insertOne(pandas.DataFrame.from_dict(document))
             if (i == 1000) { // insert only 1000 documents for testing
               break
             }
+          }
               
-        // Load data from MongoDB into a Pandas DataFrame
-         rome = pd.DataFrame(list(documents))
+          // Load data from MongoDB into a Pandas DataFrame
+          def documents = collection.find()
+          def df = pandas.DataFrame(list(documents))
 
-        // Clean and normalize data
-        rome = rome.drop("_id")
-        rome['review_date'] = pd.to_datetime(rome['review_date'])
-        rome['star_rating'] = pd.to_numeric(rome['star_rating'], errors = 'coerce')
-        rome = rome.dropna()
+          // Clean and normalize data
+          df = df.drop("_id")
+          df['review_date'] = pandas.to_datetime(df['review_date'])
+          df['star_rating'] = pandas.to_numeric(df['star_rating'], errors = 'coerce')
+          df = df.dropna()
 
-        // Perform data transformation
-        rome['log_rating'] = np.log(rome['star_rating'])
+          // Perform data transformation
+          df['log_rating'] = numpy.log(df['star_rating'])
 
         // Handle outliers
         def q1, q3 = np.percentile(rome['log_rating'], [25, 75])
