@@ -11,7 +11,7 @@ pipeline {
        stage('Download and Extract Dataset') {
       steps {
          bat 'curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-        bat '"C:\Users\donyo\Downloads\Gzip-1.10_Win32(static)\Gzip-1.10_Win32" x amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
+        bat '"C:\\Users\\donyo\\Downloads\\Gzip-1.10_Win32(static)\\Gzip-1.10_Win32" x amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
         bat 'head -n 1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv'
       }
     }
