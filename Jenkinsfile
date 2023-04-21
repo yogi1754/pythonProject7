@@ -83,7 +83,7 @@ pipeline {
      stage('Insert data into SQL Server') {
     steps {
         script {
-            def df = new JsonSlurper().parseText(env.DATAFRAME_JSON)
+            def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
             def connectionString = "Driver=SQL Server;Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=yes;"
             def connection = Sql.newInstance(connectionString)
             connection.execute("""
