@@ -2,11 +2,6 @@ pipeline {
   agent any
   
   stages{
-    stage('Download and extract dataset') {
-      steps {
-        bat 'curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-      }
-    }
 
     stage('Insert data into MongoDB') {
       steps {
@@ -14,6 +9,7 @@ pipeline {
           withMongodb([mongodbInstallation('mongodb')]) {
           mongodb.withServer {
           bat 'mongod --fork --logpath /var/log/mongodb.log --dbpath /var/lib/mongodb'
+          bat 'curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
           def client = MongoClient("mongodb+srv://donyogeshwar:Welcome123@yogi.arb1cl7.mongodb.net/test")
           def db = client.getDatabase('amazon_reviews')
           def collection = db.getCollection('gift_cards')
