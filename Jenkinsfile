@@ -17,14 +17,13 @@ agent any
       steps {
         script{
           
-            import csv
+            py -m pip install pymongo
+                    python <<EOF
+                    import csv
+                    import gzip
                     import json
+                    import pymongo
                     from pymongo import MongoClient
-                    import pandas as pd
-                    import numpy as np
-                    from sklearn.linear_model import LinearRegression
-                    import matplotlib.pyplot as plt
-                    import seaborn as sns
           
           // Connect to MongoDB
           def client = pymongo.MongoClient()
