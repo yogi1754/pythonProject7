@@ -74,13 +74,8 @@ pipeline {
             if (i == 1000) { // insert only 1000 documents for testing
               break
             }
-          }
-
-          // Print the number of documents in the collection
-          def count = collection.countDocuments()
-          println("Inserted $count documents into the '$collection_name' collection.")
-        }
-
+    
+      
         // Load data from MongoDB into a Pandas DataFrame
          rome = pd.DataFrame(list(documents))
 
