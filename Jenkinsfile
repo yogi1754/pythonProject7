@@ -11,7 +11,7 @@ pipeline {
     stage('Insert data into MongoDB') {
       steps {
         script {
-          def client = MongoClient()
+          def client = MongoClient(mongodb://localhost:27017/)
           def db = client.getDatabase('amazon_reviews')
           def collection = db.getCollection('gift_cards')
           def tsv = new File('amazon_reviews_us_Gift_Card_v1_00.tsv')
