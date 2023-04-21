@@ -196,4 +196,5 @@ pipeline {
         publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'figures', reportFiles: 'log_rating_over_time.png, violinplot_star_ratings.png'])
       }
     }
-  
+  }
+     
