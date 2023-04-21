@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Connect to MongoDB
-client = pymongo.MongoClient()
+client = pymongo.MongoClient("mongodb://localhost:27017/")
 database_name = 'amazon_reviews'
 collection_name = 'gift_cards'
 db = client[database_name]
