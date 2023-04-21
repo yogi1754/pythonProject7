@@ -69,7 +69,8 @@ pipeline {
             df['star_rating'] = pd.to_numeric(df['star_rating'], errors = 'coerce')
             df = df.dropna()
             df['log_rating'] = np.log(df['star_rating'])
-            q1,q3 = np.percentile(df['log_rating'], (25, 75))
+            q1 = np.percentile(df['log_rating'], 25)
+            q3 = np.percentile(df['log_rating'], 75)
             iqr = q3 - q1
             lower_bound = q1 - (1.5 * iqr)
             upper_bound = q3 + (1.5 * iqr)
