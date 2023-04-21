@@ -16,14 +16,6 @@ agent any
     stage('Data Processing') {
       steps {
         script{
-          // Import required modules and libraries
-          def pymongo = library('pymongo')
-          def pandas = library('pandas')
-          def numpy = library('numpy')
-          def sklearn = library('sklearn')
-          def matplotlib = library('matplotlib')
-          def seaborn = library('seaborn')
-
           // Connect to MongoDB
           def client = pymongo.MongoClient()
           def database_name = 'amazon_reviews'
