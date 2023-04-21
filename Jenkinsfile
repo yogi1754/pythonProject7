@@ -44,12 +44,18 @@ pipeline {
     stage('Load data from MongoDB into Pandas DataFrame') {
       steps {
         script {
-          def df = sh(script: ""
-            "
+          def df = sh(script: """
             python3 - << EOF
             import pandas as pd from pymongo
-            import MongoClient client = MongoClient() db = client['amazon_reviews'] collection = db['gift_cards'] df = pd.DataFrame(list(collection.find())) client.close() print(df.to_json()) EOF ""
-            ", returnStdout: true).trim()
+            import MongoClient 
+            client = MongoClient() 
+            db = client['amazon_reviews'] 
+            collection = db['gift_cards'] 
+            df = pd.DataFrame(list(collection.find())) 
+            client.close() 
+            print(df.to_json()) 
+            EOF 
+            """, returnStdout: true).trim()
             env.DATAFRAME_JSON = df
           }
         }
