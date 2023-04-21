@@ -1,42 +1,51 @@
 pipeline {
-  agent any
-  
-  stages{
-
-    stage('Insert data into MongoDB') {
-      steps {
-        script {
-          withMongodb([mongodbInstallation('mongodb')]) {
-          mongodb.withServer {
-          bat 'mongod --fork --logpath /var/log/mongodb.log --dbpath /var/lib/mongodb'
-          bat 'curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
-          def client = MongoClient("mongodb+srv://donyogeshwar:Welcome123@yogi.arb1cl7.mongodb.net/test")
-          def db = client.getDatabase('amazon_reviews')
-          def collection = db.getCollection('gift_cards')
-          def tsv = new File('amazon_reviews_us_Gift_Card_v1_00.tsv')
-          tsv.splitEachLine('\t') {
-            fields ->
-              def document = [: ]
-            document['marketplace'] = fields[0]
-            document['customer_id'] = fields[1]
-            document['review_id'] = fields[2]
-            document['product_id'] = fields[3]
-            document['product_parent'] = fields[4]
-            document['product_title'] = fields[5]
-            document['product_category'] = fields[6]
-            document['star_rating'] = fields[7] as int
-            document['helpful_votes'] = fields[8] as int
-            document['total_votes'] = fields[9] as int
-            document['vine'] = fields[10]
-            document['verified_purchase'] = fields[11]
-            document['review_headline'] = fields[12]
-            document['review_body'] = fields[13]
-            document['review_date'] = fields[14]
-            collection.insertOne(document)
-          }
-          client.close()
+    agent any
+    
+    stages {
+stage('Download and insert dataset into MongoDB') {
+            steps {
+                script {
+                    // Connect to MongoDB
+                    def mongodbServer = "mongodb://localhost:27017"
+                    def mongoClient = new MongoClient(mongodbServer)
+                    def databaseName = 'amazon_reviews'
+                    def collectionName = 'gift_cards'
+                    def db = mongoClient.getDatabase(databaseName)
+                    def collection = db.getCollection(collectionName)
+                    
+                    // Download and extract the dataset
+                    def url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
+                    def filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
+                    sh "curl -L -o ${filename} ${url}"
+                    sh "gzip -d ${filename}"
+                    def tsv = new File('amazon_reviews_us_Gift_Card_v1_00.tsv')
+                    
+                    // Insert data into MongoDB
+                    tsv.splitEachLine('\t') { fields ->
+                        def document = [:]
+                        document['marketplace'] = fields[0]
+                        document['customer_id'] = fields[1]
+                        document['review_id'] = fields[2]
+                        document['product_id'] = fields[3]
+                        document['product_parent'] = fields[4]
+                        document['product_title'] = fields[5]
+                        document['product_category'] = fields[6]
+                        document['star_rating'] = fields[7] as int
+                        document['helpful_votes'] = fields[8] as int
+                        document['total_votes'] = fields[9] as int
+                        document['vine'] = fields[10]
+                        document['verified_purchase'] = fields[11]
+                        document['review_headline'] = fields[12]
+                        document['review_body'] = fields[13]
+                        document['review_date'] = fields[14]
+                        collection.insertOne(document)
+                    }
+                    
+                    // Close MongoDB connection
+                    mongoClient.close()
+                }
    
-          def df = sh(script: """
+          def df = bat(script: """
             python3 - << EOF
             import pandas as pd from pymongo
             import MongoClient 
