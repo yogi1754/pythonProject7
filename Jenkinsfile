@@ -12,7 +12,7 @@ pipeline {
     stage('Insert data into MongoDB') {
       steps {
         script {
-          def client = new MongoClient()
+          def client = MongoClient()
           def db = client.getDatabase('amazon_reviews')
           def collection = db.getCollection('gift_cards')
           def tsv = new File('amazon_reviews_us_Gift_Card_v1_00.tsv')
@@ -64,7 +64,7 @@ pipeline {
       stage('Perform data cleaning and transformation') {
         steps {
           script {
-            def df = new JsonSlurper().parseText(env.DATAFRAME_JSON)
+            def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
             df['review_date'] = pd.to_datetime(df['review_date'])
             df['star_rating'] = pd.to_numeric(df['star_rating'], errors = 'coerce')
             df = df.dropna()
@@ -83,7 +83,7 @@ pipeline {
       stage('Insert data into SQL Server') {
         steps {
           script {
-            def df = new JsonSlurper().parseText(env.DATAFRAME_JSON)
+            def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
             def connectionString = "Driver=SQL Server;Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=yes;"
             def connection = Sql.newInstance(connectionString)
             connection.execute("""
