@@ -1,7 +1,17 @@
 pipeline {
   agent any
 
+  
   stages {
+    stage('Start MongoDB') {
+      steps {
+        withMongodb([mongodbInstallation('mongodb')]) {
+          mongodb.withServer {
+            sh 'mongod --fork --logpath /var/log/mongodb.log --dbpath /var/lib/mongodb'
+          }
+        }
+      }
+    }
     stage('Download and extract dataset') {
       steps {
         bat 'curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
