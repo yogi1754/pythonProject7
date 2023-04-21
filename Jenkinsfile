@@ -4,14 +4,13 @@ pipeline {
   stages {
     stage('Install Packages') {
       steps {
-        sh 'mvn install:install-file -Dfile=./ojdbc8.jar -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=19.3 -Dpackaging=jar'
-        sh 'python3 -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn'
+        bat 'python3 -m pip install pymongo pandas numpy scikit-learn matplotlib seaborn'
       }
     }
 
     stage('Download and Extract Dataset') {
       steps {
-        sh '''
+        bat '''
         curl -O https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz 
         gzip -d amazon_reviews_us_Gift_Card_v1_00.tsv.gz
         tail -n +1010 amazon_reviews_us_Gift_Card_v1_00.tsv > amazon_reviews_us_Gift_Card_v1_00_limit_1010.tsv 
