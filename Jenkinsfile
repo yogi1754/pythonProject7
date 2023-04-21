@@ -1,4 +1,19 @@
-  stage('Data Processing') {
+pipeline {  
+agent any
+  
+  stages {
+    stage('Install Packages') {
+      steps {
+        bat 'python -m pip install pymongo'
+        bat 'python -m pip install pandas'
+        bat 'python -m pip install numpy'
+        bat 'python -m pip install scikit-learn'
+        bat 'python -m pip install matplotlib'
+        bat 'python -m pip install seaborn'
+      }
+    }
+
+    stage('Data Processing') {
       steps {
         script{
           // Import required modules and libraries
