@@ -2,7 +2,7 @@ import urllib.request
 import gzip
 import csv
 import json
-py -m pip install pyodbc
+py -m pip3 install pyodbc
 import pyodbc as hr
 import pymongo as pymongo
 import pandas as pd
