@@ -5,7 +5,7 @@ pipeline {
     stage('Install Packages') {
       steps {
         bat 'py -m pip install pymongo'
-       bat 'py -m pip install pandas'
+        bat 'py -m pip install pandas'
         bat 'py -m pip install numpy'
         bat 'py -m pip install scikit-learn'
         bat 'py -m pip install matplotlib'
@@ -15,7 +15,7 @@ pipeline {
 
     stage('Data Processing') {
       steps {
-        script {
+        bat'''
           // Import required modules and libraries
           def pymongo = library('pymongo')
           def pandas = library('pandas')
@@ -63,10 +63,6 @@ pipeline {
             if (i == 1000) { // insert only 1000 documents for testing
               break
             }
-          }
-    
-          steps {
-            script {
               
         // Load data from MongoDB into a Pandas DataFrame
          rome = pd.DataFrame(list(documents))
@@ -167,7 +163,7 @@ pipeline {
         plt.savefig('https://github.com/yogi1754/pythonProject7.git/violinplot_star_ratings.png')
 
         // Close the MongoDB connection
-        client.close()
+        client.close() '''
         }
       }
     }
