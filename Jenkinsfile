@@ -21,7 +21,7 @@ agent any
                     import gzip
                     import json
                     import pymongo
-                    from pymongo import MongoClient
+          {from pymongo import MongoClient}
           
           // Connect to MongoDB
           def client = pymongo.MongoClient()
