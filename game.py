@@ -1,8 +1,8 @@
+py -m pip3 install pyodbc
 import urllib.request
 import gzip
 import csv
 import json
-py -m pip3 install pyodbc
 import pyodbc as hr
 import pymongo as pymongo
 import pandas as pd
