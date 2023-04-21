@@ -47,9 +47,9 @@ df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
 
 
 # Connect to SQL Server database
-server_name = 'localhost\\SQLEXPRESS'
+server_name = 'YOGESH\\SQLEXPRESS'
 database_name = 'master'
-cnxn = hr.connect(f'Driver=SQL Server;Server={server_name};Database={database_name};Trusted_Connection=yes;')
+cnxn = hr.connect(f'Driver=SQL Server;Server={server_name};Database={database_name};Trusted_Connection=yes;UID=yogesh;PWD=Welcome123#')
 cursor = cnxn.cursor()
 
 # Create gift_card_reviews table
