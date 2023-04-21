@@ -165,7 +165,7 @@ agent any
         plt.savefig('https://github.com/yogi1754/pythonProject7.git/violinplot_star_ratings.png')
 
         // Close the MongoDB connection
-        client.close() '''
+        client.close() 
         }
       }
     }
