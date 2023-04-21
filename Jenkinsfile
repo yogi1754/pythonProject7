@@ -20,7 +20,7 @@ pipeline {
           def tsv = new File('amazon_reviews_us_Gift_Card_v1_00.tsv')
           tsv.splitEachLine('\t') {
             fields ->
-              def document = [:]
+              def document = [: ]
             document['marketplace'] = fields[0]
             document['customer_id'] = fields[1]
             document['review_id'] = fields[2]
