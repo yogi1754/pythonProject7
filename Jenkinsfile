@@ -5,6 +5,9 @@ pipeline {
 stage('Download and insert dataset into MongoDB') {
             steps {
                 script {
+                    @Grab('org.mongodb:mongo-java-driver:3.12.10')
+                    import com.mongodb.MongoClient
+                    import groovy.json.JsonSlurperClassic
                     // Connect to MongoDB
                     def mongodbServer = "mongodb://localhost:27017"
                     def mongoClient = new MongoClient(mongodbServer)
