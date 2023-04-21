@@ -39,13 +39,7 @@ pipeline {
             collection.insertOne(document)
           }
           client.close()
-        }
-      }
-    }
-
-    stage('Load data from MongoDB into Pandas DataFrame') {
-      steps {
-        script {
+   
           def df = sh(script: """
             python3 - << EOF
             import pandas as pd from pymongo
@@ -59,13 +53,7 @@ pipeline {
             EOF 
             """, returnStdout: true).trim()
             env.DATAFRAME_JSON = df
-          }
-        }
-      }
-
-      stage('Perform data cleaning and transformation') {
-        steps {
-          script {
+        
             def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
             df['review_date'] = pd.to_datetime(df['review_date'])
             df['star_rating'] = pd.to_numeric(df['star_rating'], errors = 'coerce')
@@ -78,13 +66,7 @@ pipeline {
             upper_bound = q3 + (1.5 * iqr)
             df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
             env.DATAFRAME_JSON = df.to_json()
-          }
-        }
-      }
 
-     stage('Insert data into SQL Server') {
-    steps {
-        script {
             def df = JsonSlurper().parseText(env.DATAFRAME_JSON)
             def connectionString = "Driver=SQL Server;Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=yes;"
             def connection = Sql.newInstance(connectionString)
