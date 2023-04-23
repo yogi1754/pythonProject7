@@ -28,7 +28,7 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
             break
 
 # Load data from MongoDB into a Pandas DataFrame
-df = pd.DataFrame(list(collection.find()))
+df = pd.DataFrame(list(collection.find({}, {'_id': 0, 'vine': 0, 'product_parent': 0, 'helpful_votes': 0, 'total_votes': 0})))
 
 # Clean and normalize data
 df['review_date'] = pd.to_datetime(df['review_date'])
@@ -57,12 +57,12 @@ cnxn = hr.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+databas
 cursor = cnxn.cursor()
 
 # Create gift_card_reviews table
-cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_parent varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, helpful_votes int, total_votes int, vine varchar(255), verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
+cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
 
 # Insert data into SQL table
 for index, row in df.iterrows():
- cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-  row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_parent'], row['product_title'], row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['vine'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
+ cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?)',
+  row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_title'], row['product_category'], row['star_rating'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
 cnxn.commit()
 
 # Close the SQL connection
