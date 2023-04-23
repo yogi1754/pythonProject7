@@ -8,10 +8,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-print(pymongo.__version__)
 
 # Connect to MongoDB
-client = pymongo.MongoClient(f"mongodb://atlas-sql-6424e60e4076371bafdca45a-fhjum.a.query.mongodb.net/amazon_reviews?ssl=true&authSource=admin")
+client = pymongo.MongoClient(f"mongodb://192.168.0.88:27017/")
 database_name = 'amazon_reviews'
 collection_name = 'gift_cards'
 db = client[database_name]
