@@ -61,7 +61,7 @@ cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), custom
 
 # Insert data into SQL table
 for index, row in df.iterrows():
- cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_parent, product_title, product_category, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?)',
+ cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_title, product_category, star_rating, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?)',
   row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_title'], row['product_category'], row['star_rating'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
 cnxn.commit()
 
