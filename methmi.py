@@ -90,7 +90,7 @@ username = 'methmi'
 password = 'Welcome123#'
 
 # create the connection string
-cnxn = db.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
+cnxn = hx.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 
 # create a cursor object to execute SQL queries
 cursor = cnxn.cursor()
