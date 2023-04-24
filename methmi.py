@@ -7,10 +7,8 @@ import pyodbc as db
 import pandas as pd
 import matplotlib.pyplot as plt
 import pyodbc
-from pymongo
-import MongoClient
-from wordcloud
-import WordCloud
+from pymongo import MongoClient
+from wordcloud import WordCloud
 
 # Connect to MongoDB
 collection_name = 'us_software'
