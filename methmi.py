@@ -26,7 +26,7 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
         collection.insert_one(json.loads(json.dumps(row)))
-        if i == 1010:
+        if i == 510:
             break
 
 # Retrieve the documents from the collection, excluding "vine", "product_parent" columns
