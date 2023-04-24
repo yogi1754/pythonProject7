@@ -47,9 +47,9 @@ df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
 
 
 # Connect to SQL Server database
-server_name = 'YOGESH\\SQLEXPRESS'
+server_name = '172.20.10.14,1433'
 database_name = 'master'
-username = 'yogesh'
+username = 'methmi'
 password = 'Welcome123#'
 
 cnxn = hr.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
