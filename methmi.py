@@ -84,7 +84,7 @@ cnxn.commit()
 cursor.close()
 
 # specify the connection details
-server_name = 'DESKTOP-AC71US7'
+server_name = '172.2.10.14,1433'
 database_name = 'master'
 username = 'methmi'
 password = 'Welcome123#'
