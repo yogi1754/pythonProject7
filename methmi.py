@@ -3,7 +3,7 @@ import gzip
 import json
 import urllib.request
 
-import pyodbc as db
+import pyodbc as hx
 import pandas as pd
 import matplotlib.pyplot as plt
 import pyodbc
@@ -60,7 +60,7 @@ database_name = 'master'
 username = 'methmi'
 password = 'Welcome123#'
 
-cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
+cnxn = hx.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 cursor = cnxn.cursor()
 
 #Increase the maximum allowed length of the review_body column to 2000 characters
