@@ -23,11 +23,11 @@ url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Softwar
 filename = 'amazon_reviews_us_Software_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
 with gzip.open(filename, 'rt', encoding='utf-8') as f:
-reader = csv.DictReader(f, delimiter='\t')
-for i, row in enumerate(reader):
-collection.insert_one(json.loads(json.dumps(row)))
-if i == 1010:
-break
+  reader = csv.DictReader(f, delimiter='\t')
+  for i, row in enumerate(reader):
+    collection.insert_one(json.loads(json.dumps(row)))
+    if i == 1010:
+      break
 
 # Retrieve the documents from the collection, excluding "vine", "product_parent" columns
 cursor = collection.find({}, {"vine": 0, "product_parent": 0})
