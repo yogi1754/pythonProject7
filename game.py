@@ -58,7 +58,7 @@ cnxn = hr.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+databas
 
 cursor = cnxn.cursor()
 
-cursor.execute('DROP TABLE gift_card_reviews')
+#cursor.execute('DROP TABLE gift_card_reviews')
 
 # Create gift_card_reviews table
 cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
