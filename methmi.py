@@ -12,8 +12,7 @@ from wordcloud import WordCloud
 
 # Connect to MongoDB
 collection_name = 'us_software'
-uri = f "mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
-client = MongoClient(uri)
+client = MongoClient(f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test")
 database_name = 'amazon_reviews123'
 db = client[database_name]
 collection = db[collection_name]
