@@ -55,7 +55,7 @@ df = df.fillna(0)
 # Get the data types of each column in the DataFrame
 #print(df.dtypes)
 
-server_name = 'DESKTOP-AC71US7'
+server_name = '172.2.10.14,1433'
 database_name = 'master'
 username = 'methmi'
 password = 'Welcome123#'
