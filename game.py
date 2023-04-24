@@ -16,6 +16,8 @@ collection_name = 'gift_cards'
 db = client[database_name]
 collection = db[collection_name]
 
+db.gift_cards.drop()
+
 # Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
 filename = 'amazon_reviews_us_Gift_Card_v1_00.tsv.gz'
@@ -55,6 +57,8 @@ password = 'Welcome123#'
 cnxn = hr.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 
 cursor = cnxn.cursor()
+
+cursor.execute('DROP TABLE gift_card_reviews')
 
 # Create gift_card_reviews table
 cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
