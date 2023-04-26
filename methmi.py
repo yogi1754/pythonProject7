@@ -8,7 +8,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pyodbc
 from pymongo import MongoClient
-from wordcloud import WordCloud
+
+# get a reference to the collection
+#collection = client['amazon_reviews123']['us_software']
+
+# drop the collection
+#collection.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
@@ -173,42 +178,6 @@ plt.title('Distribution of Star Ratings by Product Title')
 # Show the plot
 plt.show()
 
-df = pd.read_sql_query("SELECT review_headline FROM amazon_sw", cnxn)
-
-# Combine all review headlines into a single string
-all_reviews_headline = " ".join(review_headline for review_headline in df['review_headline'])
-
-# Generate a word cloud
-wordcloud = WordCloud(width=800, height=800, background_color='white').generate(all_reviews_headline)
-
-# Plot the word cloud
-plt.figure(figsize=(8, 8), facecolor=None)
-plt.imshow(wordcloud)
-plt.axis("off")
-plt.tight_layout(pad=0)
-plt.show()
-
-
-df = pd.read_sql_query("SELECT review_body FROM amazon_sw", cnxn)
-
-# Combine all review bodies into a single string
-all_reviews_body = " ".join(review_body for review_body in df['review_body'])
-
-# Generate a word cloud
-wordcloud = WordCloud(width=800, height=800, background_color='white').generate(all_reviews_body)
-
-# Plot the word cloud
-plt.figure(figsize=(8, 8), facecolor=None)
-plt.imshow(wordcloud)
-plt.axis("off")
-plt.tight_layout(pad=0)
-plt.show()
-
-# get a reference to the collection
-collection = client['amazon_reviews123']['us_software']
-
-# drop the collection
-collection.drop()
 
 
 
