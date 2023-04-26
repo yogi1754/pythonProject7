@@ -52,7 +52,6 @@ df['helpful_votes'] = df['helpful_votes'].astype(int)
 df['review_body'] = df['review_body'].str.slice(0, 1000)
 
 
-
 # # Clean the data
 df = df.drop_duplicates()
 df = df.fillna(0)
@@ -67,6 +66,7 @@ password = 'Welcome123#'
 
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 cursor = cnxn.cursor()
+#cursor.execute('DROP TABLE amazon_sw')
 
 #Increase the maximum allowed length of the review_body column to 2000 characters
 cursor.execute('CREATE TABLE amazon_sw (_id VARCHAR(100), marketplace VARCHAR(50), customer_id VARCHAR(50), review_id VARCHAR(50), product_id VARCHAR(50), product_title VARCHAR(1000),'
