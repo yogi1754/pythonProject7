@@ -10,10 +10,10 @@ import pyodbc
 from pymongo import MongoClient
 
 # get a reference to the collection
-#collection = client['amazon_reviews123']['us_software']
+collection = client['amazon_reviews123']['us_software']
 
 # drop the collection
-#collection.drop()
+collection.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
@@ -74,11 +74,7 @@ cursor.execute('CREATE TABLE amazon_sw (_id VARCHAR(100), marketplace VARCHAR(50
                'verified_purchase VARCHAR(50), review_headline VARCHAR(200), review_body VARCHAR(1000), review_date date)')
 
 for index, row in df.iterrows():
-    # Truncate the review_body to the maximum allowed length
-    #max_length = 1000 # replace with the maximum allowed length for review_body column
-    #review_body = row['review_body'][:max_length]
-    review_body = row['review_body'][:1000] # truncate to 1000 characters
-    cursor.execute("INSERT INTO amazon_sw (_id, marketplace, customer_id, review_id, product_id, product_title, product_category, star_rating, helpful_votes, total_votes, verified_purchase, review_headline, review_body, review_date)"
+  cursor.execute("INSERT INTO amazon_sw (_id, marketplace, customer_id, review_id, product_id, product_title, product_category, star_rating, helpful_votes, total_votes, verified_purchase, review_headline, review_body, review_date)"
                    "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                    row['_id'], row['marketplace'], row['customer_id'], row['review_id'], row['product_id'],row['product_title'],
                    row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['verified_purchase'],
@@ -90,10 +86,6 @@ cursor = cnxn.cursor()
 
 # execute the SQL query
 query = "SELECT * FROM amazon_sw"
-
-
-# try:
-
 df = pd.read_sql(query, cnxn)
 
 # Select the column containing the star ratings
