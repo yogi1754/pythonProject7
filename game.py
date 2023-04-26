@@ -49,7 +49,7 @@ df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
 
 
 # Connect to SQL Server database
-server_name = '172.22.144.1,1433'
+server_name = '192.168.0.52,1433'
 database_name = 'master'
 username = 'methmi'
 password = 'Welcome123#'
