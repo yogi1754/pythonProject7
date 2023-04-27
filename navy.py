@@ -2,8 +2,7 @@ import csv
 import gzip
 import json
 import pymongo
-from pymongo
-import MongoClient
+from pymongo import MongoClient
 
 # Establish a connection to a MongoDB database
 client = pymongo.MongoClient(f "mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test")
