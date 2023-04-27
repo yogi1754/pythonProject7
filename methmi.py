@@ -10,11 +10,7 @@ from pymongo import MongoClient
 from wordcloud import WordCloud
 import sqlalchemy
 
-# get a reference to the collection
- #collection = client['amazon_reviews123']['us_software']
-
-# drop the collection
- #collection.drop()
+db.us_software.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
