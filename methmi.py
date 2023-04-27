@@ -11,7 +11,7 @@ from wordcloud import WordCloud
 import sqlalchemy
 
 # get a reference to the collection
- collection = client['amazon_reviews123']['us_software']
+ #collection = client['amazon_reviews123']['us_software']
 
 # drop the collection
  collection.drop()
