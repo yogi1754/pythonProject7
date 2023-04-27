@@ -14,7 +14,6 @@ collection = db[collection_name]
 # Download and extract the dataset
 url = "https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_PC_v1_00.tsv.gz"
 filename = "amazon_reviews_us_PC_v1_00.tsv.gz"
-
 with gzip.open(filename, "rt", encoding = "utf-8") as f:
   reader = csv.DictReader(f, delimiter = "\t")
   for i, row in enumerate(reader):
