@@ -10,6 +10,11 @@ from pymongo import MongoClient
 from wordcloud import WordCloud
 import sqlalchemy
 
+# get a reference to the collection
+collection = client['amazon_reviews123']['us_software']
+
+# drop the collection
+collection.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
@@ -202,11 +207,7 @@ plt.axis("off")
 plt.tight_layout(pad=0)
 plt.show()
 
-# get a reference to the collection
-collection = client['amazon_reviews123']['us_software']
 
-# drop the collection
-collection.drop()
 
 
 
