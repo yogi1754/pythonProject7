@@ -55,6 +55,9 @@ mydoc = mycol.find(myquery, myprojection)
 # Convert to pandas DataFrame
 df = pd.DataFrame(list(mydoc))
 
+# Print column names in the DataFrame
+print(df.columns)
+
 # Clean the data
 def clean_data(df):
     # Drop any rows with missing values
@@ -106,6 +109,7 @@ contractions = {
     "how'll": "how will",
     "how's": "how is",
     "I'd": "I would",
+    "I'd've": "I would have
 "i'll": "i will",
 "i'm": "i am",
 "i've": "i have",
