@@ -105,7 +105,7 @@ plt.title('Distribution of Star Ratings')
 plt.xlabel('Star Rating')
 plt.ylabel('Count')
 
-plt.savefig(r'C:\UsC:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/histogram.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/histogram.png')
 plt.close()
 
 # plot scatter plot of star rating vs helpful votes
@@ -114,7 +114,7 @@ plt.title('Star Rating vs Helpful Votes')
 plt.xlabel('Star Rating')
 plt.ylabel('Helpful Votes')
 
-plt.savefig(r'C:\UsC:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/scatter_plot1.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/scatter_plot1.png')
 plt.close()
 
 # plot scatter plot of star rating vs total votes
@@ -123,7 +123,7 @@ plt.title('Star Rating vs Total Votes')
 plt.xlabel('Star Rating')
 plt.ylabel('Total Votes')
 
-plt.savefig(r'C:\UsC:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/scatter_plot.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/scatter_plot.png')
 
 plt.close()
 
@@ -138,7 +138,7 @@ plt.title('Verified vs Non-Verified Purchases')
 plt.xlabel('Verified Purchase')
 plt.ylabel('Number of Purchases')
 
-plt.savefig(r'C:\UsC:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/Bar_Graph.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/Bar_Graph.png')
 
 plt.close()
 
@@ -156,7 +156,7 @@ plt.imshow(wordcloud)
 plt.axis("off")
 plt.tight_layout(pad=0)
 
-plt.savefig(r'C:\UsC:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/WordCloud1.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/WordCloud1.png')
 plt.close()
 
 df = pd.read_sql_query("SELECT review_body FROM amazon_sw", cnxn)
@@ -173,7 +173,7 @@ plt.imshow(wordcloud)
 plt.axis("off")
 plt.tight_layout(pad=0)
 
-plt.savefig(r'C:\UsC:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/WordCloud.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\methmi/WordCloud.png')
 plt.close()
 
 client.close()
