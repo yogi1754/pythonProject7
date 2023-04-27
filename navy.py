@@ -29,7 +29,7 @@ urllib.request.urlretrieve(url, filename)
 collection_name = 'review_watches'
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
 client = MongoClient(uri)
-db.review_watches.drop()
+#db.review_watches.drop()
 database_name = 'amazon_reviews12'
 db = client[database_name]
 collection = db[collection_name]
