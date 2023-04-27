@@ -2,7 +2,7 @@ import csv
 import gzip
 import json
 import urllib.request
-import pyodbc as pyodbc
+import pyodbc as db
 import pandas as pd
 import matplotlib.pyplot as plt
 import pyodbc as pyodbc
@@ -18,7 +18,7 @@ import pymssql
 from textblob import TextBlob
 nltk.download('stopwords')
 
-db.review_watches.drop()
+
 
 # Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
@@ -29,6 +29,7 @@ urllib.request.urlretrieve(url, filename)
 collection_name = 'review_watches'
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
 client = MongoClient(uri)
+db.review_watches.drop()
 database_name = 'amazon_reviews12'
 db = client[database_name]
 collection = db[collection_name]
