@@ -14,7 +14,7 @@ import sqlalchemy
  #collection = client['amazon_reviews123']['us_software']
 
 # drop the collection
- collection.drop()
+ #collection.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
