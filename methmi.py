@@ -191,7 +191,6 @@ plt.axis("off")
 plt.tight_layout(pad=0)
 plt.show()
 
-
 df = pd.read_sql_query("SELECT review_body FROM amazon_sw", cnxn)
 
 # Combine all review bodies into a single string
@@ -207,7 +206,8 @@ plt.axis("off")
 plt.tight_layout(pad=0)
 plt.show()
 
-
+# Close the MongoDB connection
+client.close()
 
 
 
