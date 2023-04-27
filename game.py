@@ -77,7 +77,7 @@ sns.countplot(x='verified_purchase', data=df)
 plt.xlabel('Verified Purchase')
 plt.ylabel('Count')
 plt.title('Counts of Verified vs. Unverified Purchases')
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Counts of Verified vs. Unverified Purchases.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/Counts of Verified vs. Unverified Purchases.png')
 plt.close()
 
 # Create a histogram of star ratings
@@ -85,7 +85,7 @@ plt.hist(df['star_rating'], bins=5)
 plt.title("Histogram of Star Ratings")
 plt.xlabel("Star Ratings")
 plt.ylabel("Count")
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/histogram_of_star_ratings.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/histogram_of_star_ratings.png')
 plt.close()
 
 # Create a bar chart of the count of reviews by gift card category
@@ -95,13 +95,13 @@ plt.title("Number of Reviews by Gift Card Category")
 plt.xlabel("Gift Card Category")
 plt.ylabel("Number of Reviews")
 plt.xticks(rotation=90)
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/number_of_reviews_by_gift_card_category.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/number_of_reviews_by_gift_card_category.png')
 plt.close()
 
 # Create a scatter plot matrix of the numerical variables in the dataset
 sns.pairplot(df.select_dtypes(include=[np.number]))
 plt.suptitle("Scatter Plot Matrix")
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/scatter_plot_matrix.png')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/scatter_plot_matrix.png')
 plt.close()
 
 # Close the MongoDB connection
