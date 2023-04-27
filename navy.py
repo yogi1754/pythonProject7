@@ -49,14 +49,11 @@ mycol = mydb["review_watches"]
 
 # Filter the necessary columns
 myquery = {"product_category": "PC"}
-myprojection = {"review_id", "star_rating", "helpful_votes", "total_votes","vine","verified_purchase","review_headline","review_body","review_date"}
+myprojection = {"_id": 1, "review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "review_headline": 1, "review_body": 1, "review_date": 1}
 mydoc = mycol.find(myquery, myprojection)
 
 # Convert to pandas DataFrame
 df = pd.DataFrame(list(mydoc))
-
-df.drop(columns = '_id', inplace = True)
-
 
 # Clean the data
 def clean_data(df):
@@ -73,7 +70,7 @@ def clean_data(df):
     df = df[df['verified_purchase'].isin(['Y', 'N'])]
 
     # Remove any rows where the review_body or review_title columns are empty strings
-    df = df[(df['review_body'] != '') & (df['review_title'] != '')]
+    df = df[(df['review_body'] != '') & (df['review_headline'] != '')]
 
     # Remove any rows where the star_rating column is not a number between 1 and 5
     df = df[df['star_rating'].astype(float).isin([1.0, 2.0, 3.0, 4.0, 5.0])]
@@ -84,29 +81,31 @@ def clean_data(df):
 # Remove punctuations, stopwords, and lemmatize for review columns: 'review_body' and 'review_headline'
 # A list of contractions from http://stackoverflow.com/questions/19790188/expanding-english-language-contractions-in-python
 contractions = {
-"ain't": "am not",
-"aren't": "are not",
-"can't": "cannot",
-"can't've": "cannot have",
-"'cause": "because",
-"could've": "could have",
-"couldn't": "could not",
-"couldn't've": "could not have",
-"didn't": "did not",
-"doesn't": "does not",
-"don't": "do not",
-"hadn't": "had not",
-"hadn't've": "had not have",
-"hasn't": "has not",
-"haven't": "have not",
-"he'd": "he would",
-"he'd've": "he would have",
-"he'll": "he will",
-"he's": "he is",
-"how'd": "how did",
-"how'll": "how will",
-"how's": "how is",
-"i'd": "i would",
+    "ain't": "am not",
+    "aren't": "are not",
+    "can't": "cannot",
+    "can't've": "cannot have",
+    "'cause": "because",
+    "could've": "could have",
+    "couldn't": "could not",
+    "couldn't've": "could not have",
+    "didn't": "did not",
+    "doesn't": "does not",
+    "don't": "do not",
+    "hadn't": "had not",
+    "hadn't've": "had not have",
+    "hasn't": "has not",
+    "haven't": "have not",
+    "he'd": "he would",
+    "he'd've": "he would have",
+    "he'll": "he will",
+    "he'll've": "he will have",
+    "he's": "he is",
+    "how'd": "how did",
+    "how'd'y": "how do you",
+    "how'll": "how will",
+    "how's": "how is",
+    "I'd": "I would",
 "i'll": "i will",
 "i'm": "i am",
 "i've": "i have",
