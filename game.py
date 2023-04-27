@@ -71,8 +71,7 @@ cnxn.commit()
 
 # Load data from SQL table into a Pandas DataFrame
 sql_query = 'SELECT * FROM gift_card_reviews'
-df = pd.read_sql(sql_query, cnxn, parse_dates=['review_date'], infer_datetime_format=True)
-
+df = pd.read_sql(sql_query, cnxn, parse_dates=['review_date'])
 
 # Data visualization using Seaborn
 sns.set(style="ticks")
