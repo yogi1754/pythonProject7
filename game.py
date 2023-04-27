@@ -69,9 +69,39 @@ for index, row in df.iterrows():
   row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_title'], row['product_category'], row['star_rating'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
 cnxn.commit()
 
-# Close the SQL connection
-cursor.close()
-cnxn.close()
+# Load data from SQL table into a Pandas DataFrame
+sql_query = 'SELECT * FROM gift_card_reviews'
+df = pd.read_sql(sql_query, cnxn)
+
+# Data visualization using Seaborn
+sns.set(style="ticks")
+sns.set_palette("pastel")
+sns.histplot(df, x="log_rating", hue="verified_purchase", kde=True, stat="density")
+plt.title('Distribution of Logarithmic Star Ratings by Verified Purchase')
+plt.xlabel('Logarithmic Star Rating')
+plt.ylabel('Density')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Distribution of Logarithmic Star Ratings by Verified Purchase.png')
+plt.close()
+
+sns.boxplot(x="verified_purchase", y="log_rating", data=df)
+plt.title('Boxplot of Logarithmic Star Ratings by Verified Purchase')
+plt.xlabel('Verified Purchase')
+plt.ylabel('Logarithmic Star Rating')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Boxplot of Logarithmic Star Ratings by Verified Purchase.png')
+plt.close()
+
+sns.boxplot(x='star_rating', data=df)
+plt.xlabel('Star Rating')
+plt.title('Distribution of Star Ratings')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Distribution of Star Ratings.png')
+plt.close()
+
+sns.countplot(x='verified_purchase', data=df)
+plt.xlabel('Verified Purchase')
+plt.ylabel('Count')
+plt.title('Counts of Verified vs. Unverified Purchases')
+plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Counts of Verified vs. Unverified Purchases.png')
+plt.close()
 
 # Visualize the data using a scatter plot
 plt.scatter(df['review_date'], df['log_rating'])
