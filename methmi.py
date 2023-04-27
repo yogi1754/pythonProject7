@@ -11,10 +11,10 @@ from wordcloud import WordCloud
 import sqlalchemy
 
 # get a reference to the collection
-# collection = client['amazon_reviews123']['us_software']
+ collection = client['amazon_reviews123']['us_software']
 
 # drop the collection
-# collection.drop()
+ collection.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
@@ -66,7 +66,7 @@ password = 'Welcome123#'
 
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 cursor = cnxn.cursor()
-cursor.execute('DROP TABLE amazon_sw')
+#cursor.execute('DROP TABLE amazon_sw')
 #Increase the maximum allowed length of the review_body column to 2000 characters
 cursor.execute('CREATE TABLE amazon_sw (_id VARCHAR(100), marketplace VARCHAR(50), customer_id VARCHAR(50), review_id VARCHAR(50), product_id VARCHAR(50), product_title VARCHAR(1000),'
                'product_category VARCHAR(150), star_rating INT, helpful_votes INT, total_votes INT,'
