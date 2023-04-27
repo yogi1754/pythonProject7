@@ -73,42 +73,11 @@ cnxn.commit()
 sql_query = 'SELECT * FROM gift_card_reviews'
 df = pd.read_sql(sql_query, cnxn, parse_dates=['review_date'])
 
-# Data visualization using Seaborn
-sns.set(style="ticks")
-sns.set_palette("pastel")
-sns.histplot(df, x="log_rating", hue="verified_purchase", kde=True, stat="density")
-plt.title('Distribution of Logarithmic Star Ratings by Verified Purchase')
-plt.xlabel('Logarithmic Star Rating')
-plt.ylabel('Density')
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Distribution of Logarithmic Star Ratings by Verified Purchase.png')
-plt.close()
-
-sns.boxplot(x="verified_purchase", y="log_rating", data=df)
-plt.title('Boxplot of Logarithmic Star Ratings by Verified Purchase')
-plt.xlabel('Verified Purchase')
-plt.ylabel('Logarithmic Star Rating')
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Boxplot of Logarithmic Star Ratings by Verified Purchase.png')
-plt.close()
-
-sns.boxplot(x='star_rating', data=df)
-plt.xlabel('Star Rating')
-plt.title('Distribution of Star Ratings')
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Distribution of Star Ratings.png')
-plt.close()
-
 sns.countplot(x='verified_purchase', data=df)
 plt.xlabel('Verified Purchase')
 plt.ylabel('Count')
 plt.title('Counts of Verified vs. Unverified Purchases')
 plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/Counts of Verified vs. Unverified Purchases.png')
-plt.close()
-
-# Visualize the data using a scatter plot
-plt.scatter(df['review_date'], df['log_rating'])
-plt.title("Logarithm of Rating Over Time")
-plt.xlabel("review_date")
-plt.ylabel("Logarithm of Rating")
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/logarithm_of_rating_over_time.png')
 plt.close()
 
 # Create a histogram of star ratings
@@ -133,16 +102,6 @@ plt.close()
 sns.pairplot(df.select_dtypes(include=[np.number]))
 plt.suptitle("Scatter Plot Matrix")
 plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/scatter_plot_matrix.png')
-plt.close()
-
-# Create a time series plot of the average star rating per month
-df['year_month'] = df['review_date'].dt.to_period('M')
-monthly_avg_rating = df.groupby('year_month')['star_rating'].mean()
-plt.plot(monthly_avg_rating.index.to_timestamp(), monthly_avg_rating.values)
-plt.title("Average Star Rating per Month")
-plt.xlabel("Month")
-plt.ylabel("Average Star Rating")
-plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images/average_star_rating_per_month.png')
 plt.close()
 
 # Close the MongoDB connection
