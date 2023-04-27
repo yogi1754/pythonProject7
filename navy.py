@@ -18,17 +18,16 @@ import pymssql
 from textblob import TextBlob
 nltk.download('stopwords')
 
+db.review_watches.drop()
+
 # Download and extract the dataset
-url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_PC_v1_00.tsv.gz'
-filename = 'amazon_reviews_us_PC_v1_00.tsv.gz'
+url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
+filename = 'amazon_reviews_us_Watches_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
 
 # Connect to MongoDB
 collection_name = 'review_watches'
-print('run already 0')
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
-print('run already 1')
-# uri = 'mongodb://localhost:27017/'
 client = MongoClient(uri)
 database_name = 'amazon_reviews12'
 db = client[database_name]
@@ -40,12 +39,9 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
         collection.insert_one(json.loads(json.dumps(row)))
         if i == 1010:
             break
-print('Already inserted into mongodb')
 
-# Connect to mongodb and get data
-# myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
-# uri = 'mongodb://localhost:27017/'
 myclient = MongoClient(uri)
 mydb = myclient["amazon_reviews12"]
 mycol = mydb["review_watches"]
@@ -212,6 +208,8 @@ password = 'Welcome123#'
 driver= '{ODBC Driver 17 for SQL Server}'
 cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 
+cursor.execute('DROP TABLE review_watches')
+
 # Create table
 cursor = cnxn.cursor()
 cursor.execute("""
@@ -274,58 +272,24 @@ def plot_reviews(reviews_all):
     # Get the sentiment score for each review
     reviews_all['sentiment'] = reviews_all['review_body'].apply(lambda x: TextBlob(x).sentiment.polarity)
 
-    # Aggregate the sentiment score by product
-    #     sent_agg = reviews_all.groupby('product_id')['sentiment'].agg(['mean', 'count'])
-    #     sent_agg.columns = ['ave_sentiment', 'num_reviews']
-
-    # Order the products based on the sentiment score
-    #     ordered_sent_agg = sent_agg.sort_values('ave_sentiment', ascending=False)
-
     # Get the mean rating of the product
     mean_rating = reviews_all['star_rating'].mean()
 
-    # Get the mean sentiment score of the product
-    #     mean_sentiment = ordered_sent_agg['ave_sentiment'].mean()
-
     # Plot the histogram of the stars / ratings given by the customers
     plt.hist(reviews_all['star_rating'], bins=range(7))
-
-    # Plot the histogram of the average sentiment scores for the reviews
-    #     plt.figure()
-    #     plt.hist(ordered_sent_agg['ave_sentiment'], bins=20)
-
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/histogram.png')
+    plt.close()
+   
     # Get the count of the number of reviews scraped
     num_reviews = len(reviews_all)
 
-    # Sort the reviews in descending order of their ave_sentiment scores
-    #     sorted_reviews_from_best = reviews_all.loc[reviews_all['product_id'].isin(ordered_sent_agg.index)]
-    #     sorted_reviews_from_best = sorted_reviews_from_best.sort_values('sentiment', ascending=False)
-
-    # Get the top 3 reviews
-    #     best_reviews = sorted_reviews_from_best.head(3)
-
-    # Get the bottom 3 reviews
-    #     worst_reviews = sorted_reviews_from_best.tail(3)
-
-    # Highlight the top 3 reviews by sentiment polarity (positive = green; negative = pink)
-    #     plt.figure(figsize=(10, 8))
-    #     colors = ['pink' if x < 0 else 'green' for x in best_reviews['sentiment']]
-    #     plt.bar(best_reviews['review_id'], best_reviews['sentiment'], color=colors)
-    #     plt.title('Top 3 reviews by sentiment')
-
-    # Highlight the bottom 3 reviews by sentiment polarity (positive = green; negative = pink)
-    #     plt.figure(figsize=(10, 8))
-    #     colors = ['pink' if x < 0 else 'green' for x in worst_reviews['sentiment']]
-    #     plt.bar(worst_reviews['review_id'], worst_reviews['sentiment'], color=colors)
-    #     plt.title('Bottom 3 reviews by sentiment')
-
     # Create a bar chart for verified_purchase and star_rating
     counts_verified_purchase = df.groupby(['star_rating', 'verified_purchase']).count()['review_id'].unstack()
-
     ax = counts_verified_purchase.plot.bar()
     ax.set_xlabel('Star rating')
     ax.set_ylabel('Count')
     ax.legend(title='Verified purchase', loc='upper left')
+    
 
     # Create a bar chart for text review length and star_rating
     visualize['review_length'] = visualize['review_body'].apply(len)
@@ -337,6 +301,8 @@ def plot_reviews(reviews_all):
     plt.title('Average Review Length by Star Rating')
     plt.xlabel('Star Rating')
     plt.ylabel('Average Review Length')
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/Bar_Chart.png')
+    plt.close()
 
     # Plot frequent words for all review
     cloud = wordcloud.WordCloud(background_color='gray', max_font_size=60,
@@ -346,7 +312,8 @@ def plot_reviews(reviews_all):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis('off')
     plt.title(f'Wordcloud for all Star Ratings')
-    plt.imshow(cloud);
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/cloud.png')
+    plt.close()
 
     # Plot frequent words for all rating 1
 
@@ -359,7 +326,8 @@ def plot_reviews(reviews_all):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis('off')
     plt.title(f'Wordcloud for Rating 1')
-    plt.imshow(cloud_1)
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/cloud1.png')
+    plt.close()
 
     # Plot frequent words for all rating 2
 
@@ -372,7 +340,8 @@ def plot_reviews(reviews_all):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis('off')
     plt.title(f'Wordcloud for Rating 2')
-    plt.imshow(cloud_2)
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/cloud2.png')
+    plt.close()
 
     # Plot frequent words for all rating 3
 
@@ -385,7 +354,8 @@ def plot_reviews(reviews_all):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis('off')
     plt.title(f'Wordcloud for Rating 3')
-    plt.imshow(cloud_3)
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/cloud3.png')
+    plt.close()
 
     # Plot frequent words for all rating 4
 
@@ -398,7 +368,8 @@ def plot_reviews(reviews_all):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis('off')
     plt.title(f'Wordcloud for Rating 4')
-    plt.imshow(cloud_4)
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/cloud4.png')
+    plt.close()
 
     # Plot frequent words for all rating 5
 
@@ -411,10 +382,13 @@ def plot_reviews(reviews_all):
     plt.imshow(cloud, interpolation='bilinear')
     plt.axis('off')
     plt.title(f'Wordcloud for Rating 5')
-    plt.imshow(cloud_5)
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/cloud5.png')
+    plt.close()
 
     # Plot sentiment category
     cnt_sentiment = visualize['sentiment_category'].value_counts()
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/sentiment_category.png')
+    plt.close()
 
     # Plot a pie chart of the sentiment categories
 
@@ -425,6 +399,8 @@ def plot_reviews(reviews_all):
     plt.pie(sizes, labels=labels, colors=colors,
             autopct='%1.1f%%', startangle=140)
     plt.axis('equal')
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/pie_chart.png')
+    plt.close()
 
     # plot review length distribution
 
@@ -433,8 +409,7 @@ def plot_reviews(reviews_all):
     plt.xlabel('Review Length')
     plt.ylabel('Count')
     plt.title('Review Text Length Distribution')
-
-    # Show the plots
-    plt.show()
-
-plot_reviews(visualize)
+    plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/review_length_distribution.png')
+    plt.close()
+   
+client.close()
