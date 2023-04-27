@@ -82,6 +82,7 @@ for index, row in df.iterrows():
                    row['_id'], row['marketplace'], row['customer_id'], row['review_id'], row['product_id'],row['product_title'],
                    row['product_category'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['verified_purchase'],
                    row['review_headline'], row['review_body'], row['review_date'])
+    cnxn.commit()
 
 
 # create a cursor object to execute SQL queries
