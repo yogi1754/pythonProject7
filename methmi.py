@@ -10,7 +10,6 @@ from pymongo import MongoClient
 from wordcloud import WordCloud
 import sqlalchemy
 
-#db.us_software.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
@@ -20,6 +19,8 @@ database_name = 'amazon_reviews123'
 db = client[database_name]
 collection = db[collection_name]
 
+db.us_software.drop()
+
 # Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Software_v1_00.tsv.gz'
 filename = 'amazon_reviews_us_Software_v1_00.tsv.gz'
@@ -28,7 +29,7 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
         collection.insert_one(json.loads(json.dumps(row)))
-        if i == 100:
+        if i == 1010:
             break
 
 # Retrieve the documents from the collection, excluding "vine", "product_parent" columns
@@ -62,7 +63,7 @@ password = 'Welcome123#'
 
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
 cursor = cnxn.cursor()
-#cursor.execute('DROP TABLE amazon_sw')
+cursor.execute('DROP TABLE amazon_sw')
 #Increase the maximum allowed length of the review_body column to 2000 characters
 cursor.execute('CREATE TABLE amazon_sw (_id VARCHAR(100), marketplace VARCHAR(50), customer_id VARCHAR(50), review_id VARCHAR(50), product_id VARCHAR(50), product_title VARCHAR(1000),'
                'product_category VARCHAR(150), star_rating INT, helpful_votes INT, total_votes INT,'
