@@ -178,10 +178,7 @@ def clean_text(text):
     
     # Remove any non-alphanumeric characters and convert to lowercase
     text = re.sub(r'[^a-zA-Z0-9\s]', '', text).lower()
-    
-    # Expand contractions
-    text = contractions(text)
-    
+      
     return text
 
 def clean_text_df(df, columns):
