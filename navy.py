@@ -18,13 +18,6 @@ import pymssql
 from textblob import TextBlob
 nltk.download('stopwords')
 
-
-
-# Download and extract the dataset
-url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
-filename = 'amazon_reviews_us_Watches_v1_00.tsv.gz'
-urllib.request.urlretrieve(url, filename)
-
 # Connect to MongoDB
 collection_name = 'review_watches'
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
@@ -33,6 +26,15 @@ client = MongoClient(uri)
 database_name = 'amazon_reviews12'
 db = client[database_name]
 collection = db[collection_name]
+
+db.review_watches.drop()
+
+# Download and extract the dataset
+url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
+filename = 'amazon_reviews_us_Watches_v1_00.tsv.gz'
+urllib.request.urlretrieve(url, filename)
+
+
 
 with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
@@ -215,10 +217,12 @@ password = 'Welcome123#'
 driver= '{ODBC Driver 17 for SQL Server}'
 cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 
-#cursor.execute('DROP TABLE review_watches')
+cursor = cnxn.cursor()
+
+cursor.execute('DROP TABLE review_watches')
 
 # Create table
-cursor = cnxn.cursor()
+
 cursor.execute("""CREATE TABLE review_watches (review_id VARCHAR(255), star_rating INT, helpful_votes INT, total_votes INT, vine VARCHAR(255), verified_purchase VARCHAR(255), review_headline VARCHAR(255), review_body VARCHAR(MAX), review_date DATETIME)""")
 
 # Insert data
