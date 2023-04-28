@@ -73,14 +73,14 @@ def clean_data(df):
     df = df[df['verified_purchase'].isin(['Y', 'N'])]
 
     # Remove any rows where the review_body or review_title columns are empty strings
-    df = df[(df['body'] != '') & (df['title'] != '')]
+    df = df[(df['review_body']!=") & (df['review_headline']!=")]
 
     # Remove any rows where the star_rating column is not a number between 1 and 5
     df = df[df['star_rating'].astype(float).isin([1.0, 2.0, 3.0, 4.0, 5.0])]
 
     return df
 
-df.drop(columns = "_id",inplace=True)
+#df.drop(columns = "_id",inplace=True)
 
 # Preprocessing
 # Remove punctuations, stopwords, and lemmatize for review columns: 'review_body' and 'review_headline'
