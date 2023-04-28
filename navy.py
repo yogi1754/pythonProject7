@@ -49,7 +49,7 @@ mycol = mydb["review_watches"]
 
 # Filter the necessary columns
 myquery = {"product_category": "Watches"}
-myprojection = {"_id": 1, "review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "title": 1, "body": 1, "review_date": 1}
+myprojection = {"_id": 1, "review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "title": 1, "review_body": 1, "review_date": 1}
 mydoc = mycol.find(myquery, myprojection)
 
 # Convert to pandas DataFrame
