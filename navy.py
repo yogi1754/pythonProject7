@@ -2,7 +2,6 @@ import csv
 import gzip
 import json
 import urllib.request
-import pyodbc as db
 import pandas as pd
 import matplotlib.pyplot as plt
 import pyodbc as pyodbc
@@ -10,19 +9,25 @@ from pymongo import MongoClient
 import re
 import wordcloud
 from wordcloud import WordCloud
-import re
 import string
-import nltk
-from nltk.corpus import stopwords
 import pymssql
 from textblob import TextBlob
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 nltk.download('stopwords')
+nltk.download('wordnet')
+
+# download stopwords and initialize lemmatizer
+stop_words = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
 
 # Connect to MongoDB
 collection_name = 'review_watches'
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
 client = MongoClient(uri)
-#db.review_watches.drop()
+
+# db.review_watches.drop()
 database_name = 'amazon_reviews12'
 db = client[database_name]
 collection = db[collection_name]
@@ -75,111 +80,94 @@ def clean_data(df):
     # Remove any rows where the review_body or review_title columns are empty strings
     df = df[(df['review_body']!='') & (df['review_headline']!='')]
 
-    df = df[pd.to_numeric(df['star_rating'], errors='coerce').notnull()]
-    
-    clean_data(df)
+    # Remove any rows where the star_rating column cannot be converted to a numeric value
+    df['star_rating'] = pd.to_numeric(df['star_rating'], errors='coerce')
+    df.dropna(subset=['star_rating'], inplace=True)
+
+    # Remove punctuation, expand contractions, tokenize, remove stopwords, and lemmatize
+    def expand_contractions(text):
+        def expand_contractions(text):
+    contractions = {
+        "ain't": "are not",
+        "aren't": "are not",
+        "can't": "cannot",
+        "'cause": "because",
+        "could've": "could have",
+        "couldn't": "could not",
+        "didn't": "did not",
+        "doesn't": "does not",
+        "don't": "do not",
+        "hadn't": "had not",
+        "hasn't": "has not",
+        "haven't": "have not",
+        "he'd": "he would",
+        "he'll": "he will",
+        "he's": "he is",
+        "how'd": "how did",
+        "how'll": "how will",
+        "how's": "how is",
+        "I'd": "I would",
+        "I'll": "I will",
+        "I'm": "I am",
+        "I've": "I have",
+        "isn't": "is not",
+        "it'd": "it would",
+        "it'll": "it will",
+        "it's": "it is",
+        "let's": "let us",
+        "ma'am": "madam",
+        "mayn't": "may not",
+        "might've": "might have",
+        "mightn't": "might not",
+        "must've": "must have",
+        "mustn't": "must not",
+        "needn't": "need not",
+        "oughtn't": "ought not",
+        "shan't": "shall not",
+        "sha'n't": "shall not",
+        "she'd": "she would",
+        "she'll": "she will",
+        "she's": "she is",
+        "should've": "should have",
+        "shouldn't": "should not",
+        "that'd": "that would",
+        "that's": "that is",
+        "there'd": "there had",
+        "there's": "there is",
+        "they'd": "they would",
+        "they'll": "they will",
+        "they're": "they are",
+        "they've": "they have",
+        "wasn't": "was not",
+        "we'd": "we would",
+        "we'll": "we will",
+        "we're": "we are",
+        "we've": "we have",
+        "weren't": "were not",
+        "what'll": "what will",
+        "what're": "what are",
+        "what's": "what is",
+        "what've": "what have",
+        "where'd": "where did",
+        "where's": "where is",
+        "who'll": "who will",
+        "who's": "who is",
+        "won't": "will not",
+        "would've": "would have",
+        "wouldn't": "would not",
+        "you'd": "you would",
+        "you'll": "you will",
+        "you're": "you are",
+        "you've": "you have"
+    }
+    # Replace contractions with their expansions
+    for contraction, expansion in contractions.items():
+        text = re.sub(f'({contraction})', expansion, text, flags=re.IGNORECASE)
+    return text
 
 
-#df.drop(columns = "_id",inplace=True)
 
-# Preprocessing
-# Remove punctuations, stopwords, and lemmatize for review columns: 'review_body' and 'review_headline'
-# A list of contractions from http://stackoverflow.com/questions/19790188/expanding-english-language-contractions-in-python
-contractions = {
-    "ain't": "am not",
-    "aren't": "are not",
-    "can't": "cannot",
-    "can't've": "cannot have",
-    "'cause": "because",
-    "could've": "could have",
-    "couldn't": "could not",
-    "couldn't've": "could not have",
-    "didn't": "did not",
-    "doesn't": "does not",
-    "don't": "do not",
-    "hadn't": "had not",
-    "hadn't've": "had not have",
-    "hasn't": "has not",
-    "haven't": "have not",
-    "he'd": "he would",
-    "he'd've": "he would have",
-    "he'll": "he will",
-    "he'll've": "he will have",
-    "he's": "he is",
-    "how'd": "how did",
-    "how'd'y": "how do you",
-    "how'll": "how will",
-    "how's": "how is",
-    "I'd": "I would",
-    "I'd've": "I would have",
-"i'll": "i will",
-"i'm": "i am",
-"i've": "i have",
-"isn't": "is not",
-"it'd": "it would",
-"it'll": "it will",
-"it's": "it is",
-"let's": "let us",
-"ma'am": "madam",
-"mayn't": "may not",
-"might've": "might have",
-"mightn't": "might not",
-"must've": "must have",
-"mustn't": "must not",
-"needn't": "need not",
-"oughtn't": "ought not",
-"shan't": "shall not",
-"sha'n't": "shall not",
-"she'd": "she would",
-"she'll": "she will",
-"she's": "she is",
-"should've": "should have",
-"shouldn't": "should not",
-"that'd": "that would",
-"that's": "that is",
-"there'd": "there had",
-"there's": "there is",
-"they'd": "they would",
-"they'll": "they will",
-"they're": "they are",
-"they've": "they have",
-"wasn't": "was not",
-"we'd": "we would",
-"we'll": "we will",
-"we're": "we are",
-"we've": "we have",
-"weren't": "were not",
-"what'll": "what will",
-"what're": "what are",
-"what's": "what is",
-"what've": "what have",
-"where'd": "where did",
-"where's": "where is",
-"who'll": "who will",
-"who's": "who is",
-"won't": "will not",
-"wouldn't": "would not",
-"you'd": "you would",
-"you'll": "you will",
-"you're": "you are"
-}
-
-
-def clean_text_df(df, columns, remove_stopwords=True):
-    """
-    Clean text columns in a dataframe
-
-    Parameters:
-    df (pandas dataframe): the dataframe containing the text columns to be cleaned
-    columns (list of str): the name(s) of the text column(s) to be cleaned
-    remove_stopwords (bool): whether to remove stopwords or not (default True)
-
-    Returns:
-    df_clean (pandas dataframe): a new dataframe with cleaned text columns
-    """
-
-    # Define function to clean a single text column
-    def clean_text(text):
+def clean_text(text):
         # Convert to lowercase
         text = text.lower()
         # Remove URLs
