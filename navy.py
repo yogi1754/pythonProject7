@@ -180,7 +180,7 @@ def clean_text(text):
     text = re.sub(r'[^a-zA-Z0-9\s]', '', text).lower()
     
     # Expand contractions
-    text = expand_contractions(text)
+    text = contractions(text)
     
     return text
 
