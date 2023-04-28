@@ -48,7 +48,7 @@ mydb = myclient["amazon_reviews12"]
 mycol = mydb["review_watches"]
 
 # Filter the necessary columns
-myquery = {"product_category": "PC"}
+myquery = {"product_category": "Watches"}
 myprojection = {"_id": 1, "review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "title": 1, "body": 1, "review_date": 1}
 mydoc = mycol.find(myquery, myprojection)
 
@@ -202,7 +202,7 @@ def clean_text_df(df, columns, remove_stopwords=True):
     return df_clean
 
 # Clean 'review_body' and 'review_headline'
-df_clean = clean_text_df(df, ['review_headline'])
+df_clean = clean_text_df(df, ['review_body','review_headline'])
 
 # Define connection string
 server = '192.168.0.52,1433'
