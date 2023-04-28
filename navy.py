@@ -75,10 +75,9 @@ def clean_data(df):
     # Remove any rows where the review_body or review_title columns are empty strings
     df = df[(df['review_body']!=") & (df['review_headline']!=")]
 
-    # Remove any rows where the star_rating column is not a number between 1 and 5
-    df = df[df['star_rating'].astype(float).isin([1.0, 2.0, 3.0, 4.0, 5.0])]
+    df = df[pd.to_numeric(df['star_rating'], errors='coerce').notnull()]
 
-    return df
+    
 
 #df.drop(columns = "_id",inplace=True)
 
