@@ -186,14 +186,19 @@ def clean_text(text):
     
     return text
 
-df_clean = df.copy()
-for col in columns:
-    df_clean[col] = df_clean[col].apply(clean_text)
-   
-return df_clean
+def clean_text_df(df, columns):
+    # Create new dataframe with cleaned text columns
+    df_clean = df.copy()
+    for col in columns:
+        df_clean[col] = df_clean[col].apply(clean_text)
+    return df_clean
+
+# Read in the data
+df = pd.read_csv('reviews.csv')
 
 # Clean 'review_body' and 'review_headline'
 df_clean = clean_text_df(df, ['review_body', 'review_headline'])
+
 
 # Define connection string
 server = '192.168.0.52,1433'
