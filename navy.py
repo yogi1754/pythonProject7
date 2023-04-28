@@ -262,4 +262,7 @@ def plot_reviews(reviews_all, save_plots, save_dir=None):
         plt.savefig(os.path.join(save_dir, "sentiment_pie.png"))
         plt.savefig(os.path.join(save_dir, "review_length_distribution.png"))
 
-plot_reviews(visualize, "./navy/")
+plot_reviews(visualize, "C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy/")
+
+
+client.close()
