@@ -73,11 +73,10 @@ def clean_data(df):
     df = df[df['verified_purchase'].isin(['Y', 'N'])]
 
     # Remove any rows where the review_body or review_title columns are empty strings
-    df = df[(df['review_body']!=") & (df['review_headline']!=")]
+    df = df[(df['review_body']!='') & (df['review_headline']!='')]
 
     df = df[pd.to_numeric(df['star_rating'], errors='coerce').notnull()]
 
-    
 
 #df.drop(columns = "_id",inplace=True)
 
