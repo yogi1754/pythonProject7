@@ -309,8 +309,7 @@ def plot_reviews(reviews_all):
     plt.close()
 
     # Plot frequent words for all review
-    cloud = wordcloud.WordCloud(background_color='gray', max_font_size=60,
-                                relative_scaling=1).generate(' '.join(df.review_body))
+    cloud = wordcloud.WordCloud(background_color='gray', max_font_size=60, relative_scaling=1).generate(' '.join(df.review_body))
 
     plt.figure(figsize=(10, 8))
     plt.imshow(cloud, interpolation='bilinear')
@@ -323,8 +322,7 @@ def plot_reviews(reviews_all):
 
     df_1 = visualize[visualize['star_rating'] == 1]
 
-    cloud_1 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(
-        ' '.join(df_1.review_body))
+    cloud_1 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(' '.join(df_1.review_body))
 
     plt.figure(figsize=(10, 8))
     plt.imshow(cloud, interpolation='bilinear')
@@ -337,8 +335,7 @@ def plot_reviews(reviews_all):
 
     df_2 = visualize[visualize['star_rating'] == 2]
 
-    cloud_2 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(
-        ' '.join(df_2.review_body))
+    cloud_2 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(' '.join(df_2.review_body))
 
     plt.figure(figsize=(10, 8))
     plt.imshow(cloud, interpolation='bilinear')
@@ -351,8 +348,7 @@ def plot_reviews(reviews_all):
 
     df_3 = visualize[visualize['star_rating'] == 3]
 
-    cloud_3 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(
-        ' '.join(df_3.review_body))
+    cloud_3 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(' '.join(df_3.review_body))
 
     plt.figure(figsize=(10, 8))
     plt.imshow(cloud, interpolation='bilinear')
@@ -365,8 +361,7 @@ def plot_reviews(reviews_all):
 
     df_4 = visualize[visualize['star_rating'] == 4]
 
-    cloud_4 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(
-        ' '.join(df_4.review_body))
+    cloud_4 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(' '.join(df_4.review_body))
 
     plt.figure(figsize=(10, 8))
     plt.imshow(cloud, interpolation='bilinear')
@@ -379,8 +374,7 @@ def plot_reviews(reviews_all):
 
     df_5 = visualize[visualize['star_rating'] == 5]
 
-    cloud_5 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(
-        ' '.join(df_5.review_body))
+    cloud_5 = wordcloud.WordCloud(background_color='white', max_font_size=60, relative_scaling=1).generate(' '.join(df_5.review_body))
 
     plt.figure(figsize=(10, 8))
     plt.imshow(cloud, interpolation='bilinear')
