@@ -10,7 +10,7 @@ from pymongo import MongoClient
 from wordcloud import WordCloud
 import sqlalchemy
 
-db.us_software.drop()
+#db.us_software.drop()
 
 # Connect to MongoDB
 collection_name = 'us_software'
