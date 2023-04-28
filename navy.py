@@ -49,7 +49,7 @@ mycol = mydb["review_watches"]
 
 # Filter the necessary columns
 myquery = {"product_category": "PC"}
-myprojection = {"_id": 1, "review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "review_headline": 1, "review_body": 1, "review_date": 1}
+myprojection = {"_id": 1, "review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "title": 1, "body": 1, "review_date": 1}
 mydoc = mycol.find(myquery, myprojection)
 
 # Convert to pandas DataFrame
@@ -73,7 +73,7 @@ def clean_data(df):
     df = df[df['verified_purchase'].isin(['Y', 'N'])]
 
     # Remove any rows where the review_body or review_title columns are empty strings
-    df = df[(df['review_body'] != '') & (df['review_headline'] != '')]
+    df = df[(df['body'] != '') & (df['title'] != '')]
 
     # Remove any rows where the star_rating column is not a number between 1 and 5
     df = df[df['star_rating'].astype(float).isin([1.0, 2.0, 3.0, 4.0, 5.0])]
