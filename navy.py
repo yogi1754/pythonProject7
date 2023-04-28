@@ -87,7 +87,8 @@ def clean_data(df):
     # Remove punctuation, expand contractions, tokenize, remove stopwords, and lemmatize
     def expand_contractions(text):
         def expand_contractions(text):
-    contractions = {
+            
+            contractions = {
         "ain't": "are not",
         "aren't": "are not",
         "can't": "cannot",
