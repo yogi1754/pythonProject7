@@ -217,19 +217,7 @@ cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';DATABASE='+database+'
 
 # Create table
 cursor = cnxn.cursor()
-cursor.execute("""
-    CREATE TABLE review_watches (
-    review_id VARCHAR(255),
-    star_rating INT,
-    helpful_votes INT,
-    total_votes INT,
-    vine VARCHAR(255),
-    verified_purchase VARCHAR(255),
-    review_headline VARCHAR(255),
-    review_body VARCHAR(MAX),
-    review_date DATETIME
-    )
-""")
+cursor.execute("""CREATE TABLE review_watches (review_id VARCHAR(255), star_rating INT, helpful_votes INT, total_votes INT, vine VARCHAR(255), verified_purchase VARCHAR(255), review_headline VARCHAR(255), review_body VARCHAR(MAX), review_date DATETIME)""")
 
 # Convert DataFrame to list of tuples
 values = [tuple(x) for x in df_clean.values]
