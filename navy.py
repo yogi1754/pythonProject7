@@ -85,9 +85,7 @@ def clean_data(df):
     df.dropna(subset=['star_rating'], inplace=True)
 
     # Remove punctuation, expand contractions, tokenize, remove stopwords, and lemmatize
-    def expand_contractions(text):
-        def expand_contractions(text):
-            
+    def expand_contractions(text): 
             contractions = {
         "ain't": "are not",
         "aren't": "are not",
