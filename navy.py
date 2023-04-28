@@ -169,27 +169,26 @@ def clean_data(df):
 
 
 def clean_text(text):
-        # Convert to lowercase
-        text = text.lower()
-        # Remove URLs
-        text = re.sub(r'http\S+', '', text)
-        # Remove HTML tags
-        text = re.sub(r'<.*?>', '', text)
-        # Remove punctuation
-        text = text.translate(str.maketrans('', '', string.punctuation))
-        # Remove digits
-        text = re.sub(r'\d+', '', text)
-        # Remove stopwords
-        if remove_stopwords:
-            stop_words = set(stopwords.words('english'))
-            text = ' '.join([word for word in text.split() if word not in stop_words])
-        return text
+    # Remove any links
+    text = re.sub(r'http\S+', '', text)
+    
+    # Remove any mentions
+    text = re.sub(r'@\w+', '', text)
+    
+    # Remove any hashtags
+    text = re.sub(r'#\w+', '', text)
+    
+    # Remove any non-alphanumeric characters and convert to lowercase
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text).lower()
+    
+    # Expand contractions
+    text = expand_contractions(text)
+    
+    return text
 
-    # Create new dataframe with cleaned text columns
-    df_clean = df.copy()
-    for col in columns:
-        df_clean[col] = df_clean[col].apply(clean_text)
-
+df_clean = df.copy()
+for col in columns:
+    df_clean[col] = df_clean[col].apply(clean_text)
     return df_clean
 
 # Clean 'review_body' and 'review_headline'
