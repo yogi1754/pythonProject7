@@ -189,7 +189,8 @@ def clean_text(text):
 df_clean = df.copy()
 for col in columns:
     df_clean[col] = df_clean[col].apply(clean_text)
-    return df_clean
+   
+return df_clean
 
 # Clean 'review_body' and 'review_headline'
 df_clean = clean_text_df(df, ['review_body', 'review_headline'])
