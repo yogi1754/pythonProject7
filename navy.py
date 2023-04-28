@@ -202,7 +202,7 @@ def clean_text_df(df, columns, remove_stopwords=True):
     return df_clean
 
 # Clean 'review_body' and 'review_headline'
-df_clean = clean_text_df(df, ['review_body', 'review_headline'])
+df_clean = clean_text_df(df, ['review_headline'])
 
 # Define connection string
 server = '192.168.0.52,1433'
