@@ -81,6 +81,8 @@ def clean_data(df):
 
     return df
 
+df.drop(columns = "_id",inplace=True)
+
 # Preprocessing
 # Remove punctuations, stopwords, and lemmatize for review columns: 'review_body' and 'review_headline'
 # A list of contractions from http://stackoverflow.com/questions/19790188/expanding-english-language-contractions-in-python
