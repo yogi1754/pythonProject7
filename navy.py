@@ -33,9 +33,6 @@ db.review_watches.drop()
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
 filename = 'amazon_reviews_us_Watches_v1_00.tsv.gz'
 urllib.request.urlretrieve(url, filename)
-
-
-
 with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
@@ -223,7 +220,7 @@ cursor.execute('DROP TABLE review_watches')
 
 # Create table
 
-cursor.execute("""CREATE TABLE review_watches (review_id VARCHAR(255), star_rating INT, helpful_votes INT, total_votes INT, vine VARCHAR(255), verified_purchase VARCHAR(255), review_headline VARCHAR(255), review_body VARCHAR(MAX), review_date DATETIME)""")
+cursor.execute('CREATE TABLE review_watches (review_id VARCHAR(255), star_rating INT, helpful_votes INT, total_votes INT, vine VARCHAR(255), verified_purchase VARCHAR(255), review_headline VARCHAR(255), review_body VARCHAR(MAX), review_date DATETIME)')
 
 # Insert data
 cursor.execute('INSERT INTO review_watches (review_id, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date) values(?, ?, ?, ?, ?, ?, ?, ?, ?)', row['review_id'], row['star_rating'], row['helpful_votes'], row['total_votes'], row['vine'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'])
