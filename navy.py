@@ -125,6 +125,8 @@ password = 'Welcome123#'
 driver= '{ODBC Driver 17 for SQL Server}'
 cnxn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
 
+cursor.execute('DROP TABLE review_watches')
+
 # Create table
 cursor = cnxn.cursor()
 cursor.execute("""
