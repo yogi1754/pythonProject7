@@ -151,8 +151,8 @@ cursor.execute("""
 
 # Insert data
 cursor.execute("INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine
-                        , verified_purchase, review_headline, review_body, review_date)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                        , verified_purchase, review_headline, review_body, review_date)"
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
 
 #cursor.executemany(query, data.values.tolist())
 
