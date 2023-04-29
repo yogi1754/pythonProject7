@@ -2,7 +2,7 @@ import csv
 import gzip
 import json
 import urllib.request
-import pyodbc as db
+import pyodbc as pyodbc
 import pandas as pd
 import matplotlib.pyplot as plt
 import pyodbc as pyodbc
