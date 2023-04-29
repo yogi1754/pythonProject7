@@ -152,6 +152,9 @@ cursor.execute("""
 insert_query = """INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
+data['review_id'] = data['review_id'].astype(str)
+data['product_id'] = data['product_id'].astype(str)
+
 cursor.executemany(insert_query, data.values.tolist())
 
 
