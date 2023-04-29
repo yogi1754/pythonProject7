@@ -147,14 +147,14 @@ cursor.execute("""
 """)
 
 # Convert DataFrame to list of tuples
-values = [tuple(x) for x in data.values]
+#values = [tuple(x) for x in data.values]
 
 # Insert data
-query = """INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine
+query= '''"INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine
                         , verified_purchase, review_headline, review_body, review_date)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
 
-cursor.executemany(query, values)
+cursor.executemany(query, data.values.tolist()))
 
 cnxn.commit()
 
