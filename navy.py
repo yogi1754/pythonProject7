@@ -150,8 +150,7 @@ cursor.execute("""
 #values = [tuple(x) for x in data.values]
 
 # Insert data
-cursor.execute("INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date)"
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tuple(x) for x in data.values])
+cursor.execute("INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",  [tuple(x) for x in data.values])
 
 #cursor.executemany(query, data.values.tolist())
 
