@@ -150,11 +150,11 @@ cursor.execute("""
 values = [tuple(x) for x in data.values]
 
 # Insert data
-insert_query = """INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine
+query = """INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine
                         , verified_purchase, review_headline, review_body, review_date)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-cursor.fast_executemany = True
-cursor.executemany(insert_query, values)
+
+cursor.executemany(query, values)
 
 cnxn.commit()
 
