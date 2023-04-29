@@ -116,6 +116,8 @@ def clean_text_df(df, columns, remove_stopwords=True):
 
 # Clean 'review_body' and 'review_headline'
 data = clean_text_df(df, ['review_body', 'review_headline'])
+data['review_id'] = data['review_id'].astype(str)
+data['product_id'] = data['product_id'].astype(str)
 
 # Define connection string
 server = '192.168.0.52,1433'
@@ -148,9 +150,6 @@ cursor.execute("""
 
 # Convert DataFrame to list of tuples
 #values = [tuple(x) for x in data.values]
-
-data['review_id'] = data['review_id'].astype(str)
-data['product_id'] = data['product_id'].astype(str)
 
 insert_query = """INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine, verified_purchase, review_headline, review_body, review_date)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
