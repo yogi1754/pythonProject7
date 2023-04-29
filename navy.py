@@ -116,8 +116,6 @@ def clean_text_df(df, columns, remove_stopwords=True):
 
 # Clean 'review_body' and 'review_headline'
 data = clean_text_df(df, ['review_body', 'review_headline'])
-data['review_id'] = data['review_id'].astype(str)
-data['product_id'] = data['product_id'].astype(str)
 
 # Define connection string
 server = '192.168.0.52,1433'
