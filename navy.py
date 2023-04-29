@@ -153,7 +153,7 @@ values = [tuple(x) for x in data.values]
 insert_query = '''INSERT INTO review_watches (_id, review_id, star_rating, helpful_votes, total_votes, vine
                         , verified_purchase, review_headline, review_body, review_date)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-cursor.execute(insert_query, values)
+cursor.executemany(insert_query, values)
 
 cnxn.commit()
 
