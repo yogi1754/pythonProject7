@@ -23,7 +23,7 @@ nltk.download('punkt')
 collection_name = 'review_watches'
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
 client = MongoClient(uri)
-database_name = 'amazon_reviews12'
+database_name = 'amazon_reviews'
 db = client[database_name]
 collection = db[collection_name]
 
