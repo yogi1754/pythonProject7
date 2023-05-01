@@ -79,56 +79,47 @@ def clean_data(df2):
     return df2
 
 
-def clean_text_df(df2, columns, remove_stopwords=True):
+def clean_text_df(df, columns, remove_stopwords=True):
     """
-Clean text columns in a dataframe
+    Clean text columns in a dataframe
 
-Parameters:
-df (pandas dataframe): the dataframe containing the text columns to be cleaned
-columns (list of str): the name(s) of the text column(s) to be cleaned
-remove_stopwords (bool): whether to remove stopwords or not (default True)
+    Parameters:
+    df (pandas dataframe): the dataframe containing the text columns to be cleaned
+    columns (list of str): the name(s) of the text column(s) to be cleaned
+    remove_stopwords (bool): whether to remove stopwords or not (default True)
 
-Returns:
-df_clean (pandas dataframe): a new dataframe with cleaned text columns
-"""
+    Returns:
+    df_clean (pandas dataframe): a new dataframe with cleaned text columns
+    """
+    # Create a copy of the original dataframe
+    df_clean = df.copy()
 
+    # Define function to clean a single text column
+    stop_words = stopwords.words('english')
 
-# Define function to clean a single text column
-stop_words = stopwords.words('english')
+    def clean_text(text, remove_stopwords=None):
+        # Convert to lowercase
+        text = text.lower()
+        # Remove URLs
+        text = re.sub(r'http\S+', '', text)
+        # Remove HTML tags
+        text = re.sub(r'<.*?>', '', text)
+        # Remove punctuation
+        text = text.translate(str.maketrans('', '', string.punctuation))
+        tokens = word_tokenize(text)
 
-
-def clean_text(text, remove_stopwords=None):
-    # Convert to lowercase
-    text = text.lower()
-    # Remove URLs
-    text = re.sub(r'http\S+', '', text)
-    # Remove HTML tags
-    text = re.sub(r'<.*?>', '', text)
-    # Remove punctuation
-    text = text.translate(str.maketrans('', '', string.punctuation))
-    tokens = word_tokenize(text)
-
-    # Remove stopwords
-    if remove_stopwords:
-        tokens = [word for word in tokens if not word in stop_words]
+        # Remove stopwords
+        if remove_stopwords:
+            tokens = [word for word in tokens if not word in stop_words]
 
         text = ' '.join(tokens)
         return text
 
     # Create new dataframe with cleaned text columns
     for col in columns:
-        df[col] = df[col].apply(clean_text)
+        df_clean[col] = df_clean[col].apply(clean_text)
 
-    return df
-
-
-df_clean = clean_data(df)
-
-# Clean 'review_body' and 'review_headline'
-text_columns = ['review_headline', 'review_body']
-df_clean = clean_text_df(df_clean, text_columns)
-
-df_clean.to_csv('cleaned_data.csv', index=False)
+    return df_clean
 
 # Define connection string
 server = '192.168.0.52,1433'
