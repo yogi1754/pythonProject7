@@ -32,7 +32,7 @@ database_name = 'amazon_reviews'
 db = client[database_name]
 collection = db[collection_name]
 
-# db.review_watches.drop()
+db.review_watches.drop()
 
 # Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
@@ -70,7 +70,7 @@ def clean_data(df):
     df.drop_duplicates(inplace=True)
 
     # Convert the review_date column to a datetime object
-    df['review_date'] = pd.to_datetime(df['review_date'])
+    df["review_date"] = pd.to_datetime(df["review_date"])
 
     # Remove any rows where the verified_purchase column is not 'Y' or 'N'
     df = df[df['verified_purchase'].isin(['Y', 'N'])]
