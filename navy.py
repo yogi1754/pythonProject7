@@ -70,7 +70,7 @@ def clean_data(df):
     df.drop_duplicates(inplace=True)
 
     # Convert the review_date column to a datetime object
-    df["review_date"] = pd.to_datetime(df["review_date"])
+    #df["review_date"] = pd.to_datetime(df["review_date"])
 
     # Remove any rows where the verified_purchase column is not 'Y' or 'N'
     df = df[df['verified_purchase'].isin(['Y', 'N'])]
