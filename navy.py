@@ -30,7 +30,7 @@ database_name = 'amazon_reviews12'
 db = client[database_name]
 collection = db[collection_name]
 
-db.review_watches.drop()
+#db.review_watches.drop()
 
 # Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
@@ -133,7 +133,7 @@ cnxn = pyodbc.connect(
 # Create table
 cursor = cnxn.cursor()
 
-cursor.execute('DROP TABLE review_watches')
+#cursor.execute('DROP TABLE review_watches')
 
 cursor.execute("""
 CREATE TABLE review_watches (_id VARCHAR(255),
