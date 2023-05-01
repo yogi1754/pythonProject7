@@ -180,7 +180,7 @@ def sentiments(rating):
 def plot_reviews(reviews_all, save_plots, save_dir=None):
     # Define save directory
     if save_plots and save_dir is None:
-        save_dir = "./navy/"
+        save_dir = "C:\\Users\\donyo\\OneDrive\\Documents\\images\\navy\\"
         os.makedirs(save_dir, exist_ok=True)
     elif save_plots and save_dir is not None:
         os.makedirs(save_dir, exist_ok=True)
