@@ -32,7 +32,7 @@ database_name = 'amazon_reviews'
 db = client[database_name]
 collection = db[collection_name]
 
-# db.review_watches.drop()
+db.review_watches.drop()
 
 # Download and extract the dataset
 url = 'https://s3.amazonaws.com/amazon-reviews-pds/tsv/amazon_reviews_us_Watches_v1_00.tsv.gz'
@@ -221,22 +221,22 @@ ax.legend(title='Verified purchase', loc='upper left')
 plt.title('Count of Verified Purchases by Star Rating')
 plt.savefig(os.path.join(save_dir, 'bar_verified_purchases.png'))
 
-# replace missing values with an empty string
-visualize['review_body'] = visualize['review_body'].fillna('')
-
-# apply the len() function using a lambda function
-visualize['review_length'] = visualize['review_body'].apply(lambda x: len(x))
-
-# group by star_rating and calculate the mean review length
-df_grouped = visualize.groupby('star_rating')['review_length'].mean()
-
-# # Plot the bar chart
-plt.figure(figsize=(10, 8))
-plt.bar(df_grouped.index, df_grouped.values)
-plt.title('Average Review Length by Star Rating')
-plt.xlabel('Star Rating')
-plt.ylabel('Average Review Length')
-plt.savefig(os.path.join(save_dir, 'bar_review_length.png'))
+# # replace missing values with an empty string
+# visualize['review_body'] = visualize['review_body'].fillna('')
+#
+# # apply the len() function using a lambda function
+# visualize['review_length'] = visualize['review_body'].apply(lambda x: len(x))
+#
+# # group by star_rating and calculate the mean review length
+# df_grouped = visualize.groupby('star_rating')['review_length'].mean()
+#
+# # # Plot the bar chart
+# plt.figure(figsize=(10, 8))
+# plt.bar(df_grouped.index, df_grouped.values)
+# plt.title('Average Review Length by Star Rating')
+# plt.xlabel('Star Rating')
+# plt.ylabel('Average Review Length')
+# plt.savefig(os.path.join(save_dir, 'bar_review_length.png'))
 
 
 # Plot frequent words for all review
@@ -252,18 +252,18 @@ class WordCloud:
 # plt.title(f'Wordcloud for all Star Ratings')
 # plt.savefig(os.path.join(save_dir, 'wordcloud.png'))
 
-# Plot sentiment category
-cnt_sentiment = visualize['sentiment_category'].value_counts()
+# # Plot sentiment category
+# cnt_sentiment = visualize['sentiment_category'].value_counts()
 
-# Plot a pie chart of the sentiment categories
-plt.figure(figsize=(10, 8))
-labels = ['Positive', 'Neutral', 'Negative']
-sizes = [cnt_sentiment['Positive'], cnt_sentiment['Neutral'], cnt_sentiment['Negative']]
-colors = ['yellowgreen', 'gold', 'lightskyblue']
-plt.pie(sizes, labels=labels, colors=colors,
-        autopct='%1.1f%%', startangle=140)
-plt.axis('equal')
-plt.title('Distribution of Sentiment Categories')
-plt.savefig(os.path.join(save_dir, 'sentiment_pie.png'))
+# # Plot a pie chart of the sentiment categories
+# plt.figure(figsize=(10, 8))
+# labels = ['Positive', 'Neutral', 'Negative']
+# sizes = [cnt_sentiment['Positive'], cnt_sentiment['Neutral'], cnt_sentiment['Negative']]
+# colors = ['yellowgreen', 'gold', 'lightskyblue']
+# plt.pie(sizes, labels=labels, colors=colors,
+#         autopct='%1.1f%%', startangle=140)
+# plt.axis('equal')
+# plt.title('Distribution of Sentiment Categories')
+# plt.savefig(os.path.join(save_dir, 'sentiment_pie.png'))
 
 client.close()
