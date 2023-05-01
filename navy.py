@@ -60,7 +60,6 @@ mydoc = mycol.find(myquery, myprojection)
 # Convert to pandas DataFrame
 df = pd.DataFrame(list(mydoc))
 
-
 # Clean the data
 def clean_data(df):
     # Drop any rows with missing values
@@ -79,7 +78,6 @@ def clean_data(df):
     df = df[df['review_body'] != '']
 
     return df
-
 
 def clean_text_df(df, columns, remove_stopwords=True):
     """
