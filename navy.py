@@ -144,7 +144,7 @@ cnxn = pyodbc.connect(
 # Create table
 cursor = cnxn.cursor()
 
-# cursor.execute('DROP TABLE review_watches')
+cursor.execute('DROP TABLE review_watches')
 
 cursor.execute("""
 CREATE TABLE review_watches (_id VARCHAR(255),
@@ -222,29 +222,35 @@ plt.title('Count of Verified Purchases by Star Rating')
 plt.savefig(os.path.join(save_dir, 'bar_verified_purchases.png'))
 
 # replace missing values with an empty string
-# visualize['review_body'] = visualize['review_body'].fillna('')
+visualize['review_body'] = visualize['review_body'].fillna('')
 
 # apply the len() function using a lambda function
-# visualize['review_length'] = visualize['review_body'].apply(lambda x: len(x))
+visualize['review_length'] = visualize['review_body'].apply(lambda x: len(x))
 
 # group by star_rating and calculate the mean review length
-# df_grouped = visualize.groupby('star_rating')['review_length'].mean()
+df_grouped = visualize.groupby('star_rating')['review_length'].mean()
 
 # # Plot the bar chart
-# plt.figure(figsize=(10, 8))
-# plt.bar(df_grouped.index, df_grouped.values)
-# plt.title('Average Review Length by Star Rating')
-# plt.xlabel('Star Rating')
-# plt.ylabel('Average Review Length')
-# plt.savefig(os.path.join(save_dir, 'bar_review_length.png'))
-
-cloud = WordCloud(background_color='gray', max_font_size=60,
-                  relative_scaling=1).generate(' '.join(reviews_all.review_body))
 plt.figure(figsize=(10, 8))
-plt.imshow(cloud, interpolation='bilinear')
-plt.axis('off')
-plt.title(f'Wordcloud for all Star Ratings')
-plt.savefig(os.path.join(save_dir, 'wordcloud.png'))
+plt.bar(df_grouped.index, df_grouped.values)
+plt.title('Average Review Length by Star Rating')
+plt.xlabel('Star Rating')
+plt.ylabel('Average Review Length')
+plt.savefig(os.path.join(save_dir, 'bar_review_length.png'))
+
+
+# Plot frequent words for all review
+class WordCloud:
+    pass
+
+
+# cloud = WordCloud(background_color='gray', max_font_size=60,
+#                   relative_scaling=1).generate(' '.join(reviews_all.review_body))
+# plt.figure(figsize=(10, 8))
+# plt.imshow(cloud, interpolation='bilinear')
+# plt.axis('off')
+# plt.title(f'Wordcloud for all Star Ratings')
+# plt.savefig(os.path.join(save_dir, 'wordcloud.png'))
 
 # Plot sentiment category
 cnt_sentiment = visualize['sentiment_category'].value_counts()
