@@ -30,22 +30,22 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
             break
 
 # Load data from MongoDB into a Pandas DataFrame
-df = pd.DataFrame(list(collection.find({}, {'_id': 0, 'vine': 0, 'product_parent': 0, 'helpful_votes': 0, 'total_votes': 0})))
+gama = pd.DataFrame(list(collection.find({}, {'_id': 0, 'vine': 0, 'product_parent': 0, 'helpful_votes': 0, 'total_votes': 0})))
 
 # Clean and normalize data
-df['review_date'] = pd.to_datetime(df['review_date'])
-df['star_rating'] = pd.to_numeric(df['star_rating'], errors='coerce')
-df = df.dropna()
+gama['review_date'] = pd.to_datetime(gama['review_date'])
+gama['star_rating'] = pd.to_numeric(gama['star_rating'], errors='coerce')
+gama = gama.dropna()
 
 # Perform data transformation
-df['log_rating'] = np.log(df['star_rating'])
+gama['log_rating'] = np.log(gama['star_rating'])
 
 # Handle outliers
-q1, q3 = np.percentile(df['log_rating'], [25, 75])
+q1, q3 = np.percentile(gama['log_rating'], [25, 75])
 iqr = q3 - q1
 lower_bound = q1 - (1.5 * iqr)
 upper_bound = q3 + (1.5 * iqr)
-df = df[(df['log_rating'] >= lower_bound) & (df['log_rating'] <= upper_bound)]
+df = gama[(gama['log_rating'] >= lower_bound) & (gama['log_rating'] <= upper_bound)]
 
 
 # Connect to SQL Server database
@@ -71,9 +71,9 @@ cnxn.commit()
 
 # Load data from SQL table into a Pandas DataFrame
 sql_query = 'SELECT * FROM gift_card_reviews'
-df = pd.read_sql(sql_query, cnxn, parse_dates=['review_date'])
+gama = pd.read_sql(sql_query, cnxn, parse_dates=['review_date'])
 
-sns.countplot(x='verified_purchase', data=df)
+sns.countplot(x='verified_purchase', data=gama)
 plt.xlabel('Verified Purchase')
 plt.ylabel('Count')
 plt.title('Counts of Verified vs. Unverified Purchases')
@@ -89,7 +89,7 @@ plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/histogram_of_
 plt.close()
 
 # Create a bar chart of the count of reviews by gift card category
-category_counts = df.groupby('product_category')['review_id'].count()
+category_counts = gama.groupby('product_category')['review_id'].count()
 plt.bar(category_counts.index, category_counts.values)
 plt.title("Number of Reviews by Gift Card Category")
 plt.xlabel("Gift Card Category")
@@ -99,7 +99,7 @@ plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/number_of_rev
 plt.close()
 
 # Create a scatter plot matrix of the numerical variables in the dataset
-sns.pairplot(df.select_dtypes(include=[np.number]))
+sns.pairplot(gama.select_dtypes(include=[np.number]))
 plt.suptitle("Scatter Plot Matrix")
 plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/scatter_plot_matrix.png')
 plt.close()
