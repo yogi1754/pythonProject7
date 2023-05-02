@@ -53,31 +53,35 @@ mycol = mydb["review_watches"]
 
 # Filter the necessary columns
 myquery = {"product_category": "Watches"}
-myprojection = {"_id", "review_id", "star_rating", "helpful_votes", "total_votes", "vine", "verified_purchase",
-                "review_headline", "review_body", "review_date"}
+myprojection = {"review_id": 1, "star_rating": 1, "helpful_votes": 1, "total_votes": 1, "vine": 1, "verified_purchase": 1, "review_headline": 1, "review_body": 1, "review_date": 1}
 mydoc = mycol.find(myquery, myprojection)
 
-# Convert to pandas DataFrame
 df = pd.DataFrame(list(mydoc))
 
-# Clean the data
+
 def clean_data(df):
+    # Create a new DataFrame with cleaned data
+    new_df = df.copy()
+
     # Drop any rows with missing values
-    df.dropna(inplace=True)
+    new_df.dropna(inplace=True)
 
     # Remove any duplicate rows
-    df.drop_duplicates(inplace=True)
+    new_df.drop_duplicates(inplace=True)
 
-    # Convert the review_date column to a datetime object
-    df['review_date'] = pd.to_datetime(df['review_date'])
+    if 'review_date' in new_df.columns:
+        new_df['review_date'] = pd.to_datetime(new_df['review_date']).dt.tz_convert('US/Pacific')
+
+    new_df['review_date'] = pd.to_datetime(new_df['review_date']).dt.tz_convert('US/Pacific')
 
     # Remove any rows where the verified_purchase column is not 'Y' or 'N'
-    df = df[df['verified_purchase'].isin(['Y', 'N'])]
+    new_df = new_df[new_df['verified_purchase'].isin(['Y', 'N'])]
 
     # Remove any rows where the review_body or review_title columns are empty strings
-    df = df[df['review_body'] != '']
+    new_df = new_df[new_df['review_body'] != '']
 
-    return df
+    return new_df
+
 
 def clean_text_df(df, columns, remove_stopwords=True):
     """
@@ -91,13 +95,11 @@ def clean_text_df(df, columns, remove_stopwords=True):
     Returns:
     df_clean (pandas dataframe): a new dataframe with cleaned text columns
     """
-    # Create a copy of the original dataframe
-    df_clean = df.copy()
 
     # Define function to clean a single text column
-    stop_words = stopwords.words('english')
+    stop_words = set(stopwords.words('english'))
 
-    def clean_text(text, remove_stopwords=True):
+    def clean_text(text):
         # Convert to lowercase
         text = text.lower()
         # Remove URLs
@@ -116,10 +118,11 @@ def clean_text_df(df, columns, remove_stopwords=True):
         return text
 
     # Create new dataframe with cleaned text columns
+    new_df = df.copy()
     for col in columns:
-        df[col] = df[col].apply(clean_text)
+        new_df[col] = new_df[col].apply(clean_text)
 
-    return df
+    return new_df
 
 
 df_clean = clean_data(df)
@@ -129,6 +132,7 @@ text_columns = ['review_headline', 'review_body']
 df_clean = clean_text_df(df_clean, text_columns)
 
 df_clean.to_csv('cleaned_data.csv', index=False)
+
 
 # Define connection string
 server = '192.168.0.52,1433'
@@ -218,6 +222,7 @@ ax.set_ylabel('Count')
 ax.legend(title='Verified purchase', loc='upper left')
 plt.title('Count of Verified Purchases by Star Rating')
 plt.savefig(os.path.join(save_dir, 'bar_verified_purchases.png'))
+
 
 # # replace missing values with an empty string
 # visualize['review_body'] = visualize['review_body'].fillna('')
