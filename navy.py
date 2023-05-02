@@ -48,7 +48,7 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
 # Connect to mongodb and get data
 uri = f"mongodb+srv://donyogeshwar:Welcome123@cluster0.xlzwbqj.mongodb.net/test"
 myclient = MongoClient(uri)
-mydb = myclient["amazon_reviews12"]
+mydb = myclient["amazon_reviews"]
 mycol = mydb["review_watches"]
 
 # Filter the necessary columns
@@ -60,27 +60,22 @@ df = pd.DataFrame(list(mydoc))
 
 
 def clean_data(df):
-    # Create a new DataFrame with cleaned data
-    new_df = df.copy()
 
     # Drop any rows with missing values
-    new_df.dropna(inplace=True)
+    df.dropna(inplace=True)
 
     # Remove any duplicate rows
-    new_df.drop_duplicates(inplace=True)
+    df.drop_duplicates(inplace=True)
 
-    if 'review_date' in new_df.columns:
-        new_df['review_date'] = pd.to_datetime(new_df['review_date']).dt.tz_convert('US/Pacific')
-
-    new_df['review_date'] = pd.to_datetime(new_df['review_date']).dt.tz_convert('US/Pacific')
+    df['review_date'] = pd.to_datetime(df['review_date'])
 
     # Remove any rows where the verified_purchase column is not 'Y' or 'N'
-    new_df = new_df[new_df['verified_purchase'].isin(['Y', 'N'])]
+    df = df[df['verified_purchase'].isin(['Y', 'N'])]
 
     # Remove any rows where the review_body or review_title columns are empty strings
-    new_df = new_df[new_df['review_body'] != '']
+    df = df[df['review_body'] != '']
 
-    return new_df
+    return df
 
 
 def clean_text_df(df, columns, remove_stopwords=True):
@@ -118,11 +113,10 @@ def clean_text_df(df, columns, remove_stopwords=True):
         return text
 
     # Create new dataframe with cleaned text columns
-    new_df = df.copy()
     for col in columns:
-        new_df[col] = new_df[col].apply(clean_text)
+        df[col] = df[col].apply(clean_text)
 
-    return new_df
+    return df
 
 
 df_clean = clean_data(df)
