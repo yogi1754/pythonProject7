@@ -26,7 +26,7 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
         collection.insert_one(json.loads(json.dumps(row)))
-        if i == 20:
+        if i == 1020:
             break
 
 # Load data from MongoDB into a Pandas DataFrame
