@@ -26,11 +26,12 @@ with gzip.open(filename, 'rt', encoding='utf-8') as f:
     reader = csv.DictReader(f, delimiter='\t')
     for i, row in enumerate(reader):
         collection.insert_one(json.loads(json.dumps(row)))
-        if i == 1020:
+        if i == 20:
             break
 
 # Load data from MongoDB into a Pandas DataFrame
-gama = pd.DataFrame(list(collection.find({}, {'_id': 0, 'vine': 0, 'product_parent': 0, 'helpful_votes': 0, 'total_votes': 0})))
+gama = pd.DataFrame(
+    list(collection.find({}, {'_id': 0, 'vine': 0, 'product_parent': 0, 'helpful_votes': 0, 'total_votes': 0})))
 
 # Clean and normalize data
 gama['review_date'] = pd.to_datetime(gama['review_date'])
@@ -47,26 +48,30 @@ lower_bound = q1 - (1.5 * iqr)
 upper_bound = q3 + (1.5 * iqr)
 df = gama[(gama['log_rating'] >= lower_bound) & (gama['log_rating'] <= upper_bound)]
 
-
 # Connect to SQL Server database
 server_name = '192.168.0.52,1433'
 database_name = 'master'
 username = 'methmi'
 password = 'Welcome123#'
 
-cnxn = hr.connect('DRIVER={SQL Server};SERVER='+server_name+';DATABASE='+database_name+';UID='+username+';PWD='+ password)
+cnxn = hr.connect(
+    'DRIVER={SQL Server};SERVER=' + server_name + ';DATABASE=' + database_name + ';UID=' + username + ';PWD=' + password)
 
 cursor = cnxn.cursor()
 
 cursor.execute('DROP TABLE gift_card_reviews')
 
 # Create gift_card_reviews table
-cursor.execute('CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
+cursor.execute(
+    'CREATE TABLE gift_card_reviews (marketplace varchar(255), customer_id varchar(255), review_id varchar(255), product_id varchar(255), product_title varchar(255), product_category varchar(255), star_rating int, verified_purchase varchar(255), review_headline varchar(255), review_body varchar(max), review_date date, log_rating float)')
 
 # Insert data into SQL table
 for index, row in df.iterrows():
- cursor.execute('INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_title, product_category, star_rating, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?)',
-  row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_title'], row['product_category'], row['star_rating'], row['verified_purchase'], row['review_headline'], row['review_body'], row['review_date'], row['log_rating'])
+    cursor.execute(
+        'INSERT INTO gift_card_reviews (marketplace, customer_id, review_id, product_id, product_title, product_category, star_rating, verified_purchase, review_headline, review_body, review_date, log_rating) values(?,?,?,?,?,?,?,?,?,?,?,?)',
+        row['marketplace'], row['customer_id'], row['review_id'], row['product_id'], row['product_title'],
+        row['product_category'], row['star_rating'], row['verified_purchase'], row['review_headline'],
+        row['review_body'], row['review_date'], row['log_rating'])
 cnxn.commit()
 
 # Load data from SQL table into a Pandas DataFrame
@@ -81,7 +86,7 @@ plt.savefig('C:\\Users\\donyo\\OneDrive\\Documents\\images\\yogesh/Counts of Ver
 plt.close()
 
 # Create a histogram of star ratings
-plt.hist(df['star_rating'], bins=5)
+plt.hist(gama['star_rating'], bins=5)
 plt.title("Histogram of Star Ratings")
 plt.xlabel("Star Ratings")
 plt.ylabel("Count")
